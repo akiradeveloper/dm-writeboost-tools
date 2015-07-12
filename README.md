@@ -40,7 +40,6 @@ Check if the written log is successful.
 
 * Print usage when -h flag is passed
 * Error checks
-* Fix (wb\_check) crc32c computation
 * Project hierarchy should follow standard
 * Tests and Travis
 * Distribution packages
