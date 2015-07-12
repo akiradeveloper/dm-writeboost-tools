@@ -34,7 +34,7 @@ Dump the data block corresponding to the specified metablock ID.
 Check if the written log is successful.
 
 * Example: `wb_check /dev/cache 1` to check the segment ID 1
-* Status: Fixing
+* Status: Experimental
 
 ## TODO
 
