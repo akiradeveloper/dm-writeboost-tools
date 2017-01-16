@@ -1,7 +1,7 @@
 # dm-writeboost-tools
 
 Commandset to help users of [dm-writeboost](https://github.com/akiradeveloper/dm-writeboost)
-to analyze and report bugs. Written in Rust. 
+to analyze and report bugs.  
 
 ## Commands
 
@@ -10,32 +10,44 @@ to analyze and report bugs. Written in Rust.
 Pretty-print the status line.
 
 * Example: `dmsetup status wb | wb_status`
+* Status: Experimental
 
 ### wb\_meta
 
 Investigate the metadata in the cache device.
 
 * Example:
-  * `wbmeta /dev/cache 0` to see the superblock metadata (ID 0 is special)
-  * `wbmeta /dev/cache 1` to see the metadata of segment ID 1
+  * `wb_meta /dev/cache 0` to see the superblock metadata (ID 0 is special)
+  * `wb_meta /dev/cache 1` to see the metadata of segment ID 1
+* Status: Experimental
 
 ### wb\_dump
 
 Dump the data block corresponding to the specified metablock ID.
 
-* Example: `wbdump /dev/cache 126` to dump the data block of
+* Example: `wb_dump /dev/cache 126` to dump the data block of
   metablock ID 126.
+* Status: Experimental
 
 ### wb\_check
 
 Check if the written log is successful.
 
-* Example: `wbcheck /dev/cache 1` to check the segment ID 1
+* Example: `wb_check /dev/cache 1` to check the segment ID 1
+* Status: Experimental
+
+## TODO
+
+* Print usage when -h flag is passed
+* Error checks
+* Project hierarchy should follow standard
+* Tests and Travis
+* Distribution packages
 
 ## Lisence
 
 ```
-Copyright (C) 2017 Akira Hayakawa <ruby.wktk@gmail.com>
+Copyright (C) 2015 Akira Hayakawa <ruby.wktk@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
