@@ -25,6 +25,10 @@ name = "wbmeta"
 path = "src/wbmeta/main.rs"
 
 [[bin]]
+name = "wbremove"
+path = "src/wbremove/main.rs"
+
+[[bin]]
 name = "wbstatus"
 path = "src/wbstatus/main.rs"
 
