@@ -7,8 +7,8 @@ use std::env;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut opts = getopts::Options::new();
-    opts.optflag("", "no-flush", "Don't flush RAM buffer to caching device before removing");
-    opts.optflag("", "no-writeback", "Don't write back dirty caches to the backing device before removing");
+    opts.optflag("", "noflush", "Don't flush RAM buffer to caching device before removing");
+    opts.optflag("", "nowriteback", "Don't write back dirty caches to the backing device before removing");
     opts.optflag("h", "help", "todo");
     let matches = opts.parse(&args[1..]).expect("Couldn't parse args");
 
@@ -18,7 +18,7 @@ fn main() {
 
     let wbname = matches.free[0].clone();
 
-    if !matches.opt_present("no-flush") {
+    if !matches.opt_present("noflush") {
         Command::new("dmsetup")
             .arg("suspend")
             .arg(&wbname)
@@ -32,7 +32,7 @@ fn main() {
             .expect("Failed to flush transient data");
     }
 
-    if !matches.opt_present("no-writeback") {
+    if !matches.opt_present("nowriteback") {
         Command::new("dmsetup")
             .arg("message")
             .arg(&wbname)
@@ -40,8 +40,6 @@ fn main() {
             .arg("drop_caches")
             .spawn()
             .expect("Failed to drop caches");
-        
-        // kill the cache blocks
     }
 
     Command::new("dmsetup")
