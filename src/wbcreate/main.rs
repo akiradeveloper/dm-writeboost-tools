@@ -13,12 +13,12 @@ fn main() {
     opts.optopt("", "sync_data_interval", "todo", "INT");
     opts.optopt("", "read_cache_threshold", "todo", "INT");
     opts.optflag("", "write_around_mode", "todo");
-    opts.optflag("", "clean_caches", "todo");
+    opts.optflag("", "reformat", "Reformat the caching device. This cleans up all existing cache blocks");
     opts.optflag("h", "help", "todo");
-    let matches = opts.parse(&args[1..]).expect("couldn't parse args");
+    let matches = opts.parse(&args[1..]).expect("Couldn't parse args");
 
     if matches.free.len() != 3 {
-        panic!("too much or less essential parameters (should be two)");
+        panic!("Too much or less essential parameters (should be two)");
     }
 
     let wbname = matches.free[0].clone();
@@ -27,6 +27,16 @@ fn main() {
          lib::BlockDevice::new(name)
     };
     let caching_dev_name = matches.free[2].clone();
+
+    if matches.opt_present("reformat") {
+        Command::new("dd")
+            .arg("if=/dev/zero")
+            .arg(format!("of={}", caching_dev_name))
+            .arg("bs=512")
+            .arg("count=1")
+            .spawn()
+            .expect("Failed to zero out the caching device");
+    }
 
     let mut optionals: Vec<String> = Vec::new();
     if matches.opt_present("write_around_mode") {
@@ -63,11 +73,11 @@ fn main() {
                         caching_dev_name,
                         optionals_table);
 
-    let _ = Command::new("dmsetup")
+    Command::new("dmsetup")
         .arg("create")
         .arg(wbname)
         .arg("--table")
         .arg(table)
         .spawn()
-        .expect("failed to execute dmsetup create");
+        .expect("Failed to execute dmsetup create");
 }
