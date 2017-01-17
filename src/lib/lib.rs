@@ -18,7 +18,7 @@ impl BlockDevice {
     pub fn name(&self) -> String {
         self.name.to_owned()
     }
-    fn size(&self) -> i32 {
+    pub fn size(&self) -> i32 {
         use std::process::Command;
         use std::str::FromStr;
         let output: Vec<u8> =

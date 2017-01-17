@@ -13,16 +13,20 @@ name = "wbcheck"
 path = "src/wbcheck/main.rs"
 
 [[bin]]
+name = "wbcreate"
+path = "src/wbcreate/main.rs"
+
+[[bin]]
+name = "wbdump"
+path = "src/wbdump/main.rs"
+
+[[bin]]
 name = "wbmeta"
 path = "src/wbmeta/main.rs"
 
 [[bin]]
 name = "wbstatus"
 path = "src/wbstatus/main.rs"
-
-[[bin]]
-name = "wbdump"
-path = "src/wbdump/main.rs"
 
 [lib]
 name = "lib"
