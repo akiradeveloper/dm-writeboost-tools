@@ -17,7 +17,7 @@ Then `cargo install` to install the commands.
 
 Check if the log was written successfully.
 
-* `wbcheck /dev/cache 1` checks the segment ID 1
+* `wbcheck /dev/cache 1` checks the segment ID 1. Returns 0 on success.
 
 ### wbcreate
 
@@ -39,6 +39,14 @@ Look into the metadata in the cache device.
 
 * `wbmeta /dev/cache 0` dumps the superblock metadata (ID 0 is special)
 * `wbmeta /dev/cache 1` dumps the metadata of segment ID 1
+
+### wbremove
+
+Remove a WB device
+
+* `wbremove wbdev` removes a WB device after flushing data in RAM buffer and then writing back
+  all cache blocks. This is the way Dmirty Smirnov's writeboost script suggests. (Recommended)  
+* `wbremove wbdev --nowriteback` remove a WB device without writing back all cache blocks.
 
 ### wbstatus
 
