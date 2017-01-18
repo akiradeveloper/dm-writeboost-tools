@@ -40,6 +40,26 @@ fn main() {
             .arg("drop_caches")
             .spawn()
             .expect("Failed to drop caches");
+
+        let output = Command::new("dmsetup")
+            .arg("table")
+            .arg(&wbname)
+            .output()
+            .expect("Fail to dmsetup table")
+            .stdout;
+        let output = String::from_utf8(output).expect("invalid utf8 output").to_string();
+        let output = output.trim().to_string();
+        let dm_table = lib::DMTable::parse(output);
+        let path = format!("/sys/dev/block/{}/uevent", dm_table.caching_dev);
+        let sysdev_table = lib::SysDevTable::from_file(&path);
+        let caching_dev_name = sysdev_table.get("DEVNAME");
+        Command::new("dd")
+            .arg("if=/dev/zero")
+            .arg(format!("of={}", caching_dev_name))
+            .arg("bs=512")
+            .arg("count=1")
+            .spawn()
+            .expect("Failed to zero out the caching device");
     }
 
     Command::new("dmsetup")

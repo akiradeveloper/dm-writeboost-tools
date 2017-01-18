@@ -128,7 +128,7 @@ pub struct SysDevTable {
 }
 
 impl SysDevTable {
-    fn from_file(path: &str) -> SysDevTable {
+    pub fn from_file(path: &str) -> SysDevTable {
         let mut f = File::open(path).unwrap();
         let mut s = String::new();
         f.read_to_string(&mut s);
@@ -144,13 +144,40 @@ impl SysDevTable {
             map: m
         }
     }
-    fn get(&self, name: &str) -> String {
+    pub fn get(&self, name: &str) -> String {
         self.map[name].to_string()
     }
 }
 
 #[test]
 fn test_read_sysdev_file() {
-    let t = SysDevTable::from_file("src/lib/sysdev.0");
+    let t = SysDevTable::from_file("data/sysdev.0");
     assert_eq!(t.get("DEVNAME"), "vda1");
+}
+
+pub struct DMTable {
+    pub backing_dev: String,
+    pub caching_dev: String
+}
+
+impl DMTable {
+    pub fn parse(line: String) -> DMTable {
+        let line: Vec<String> = line.split(" ").filter(|x| x != &"").map(|x| x.to_string()).collect();
+        println!("{:?}", line);
+        DMTable {
+            backing_dev: line[3].clone(),
+            caching_dev: line[4].clone()
+        }
+    }
+}
+
+#[test]
+fn test_dmtable_parse() {
+    let mut s = String::new();
+    let mut f = File::open("data/sample.table.226").unwrap();
+    f.read_to_string(&mut s);
+    let t = DMTable::parse(s.trim().to_string());
+    println!("{}", s.clone());
+    assert_eq!(t.backing_dev, "251:0");
+    assert_eq!(t.caching_dev, "251:3");
 }
