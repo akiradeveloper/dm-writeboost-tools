@@ -78,7 +78,8 @@ fn main() {
     Command::new("dmsetup")
         .arg("create")
         .arg(wbname)
-        .arg(format!("--table \'{}\'", table))
+        .arg("--table")
+        .arg(format!("\'{}\'", table))
         .spawn()
         .expect("Failed to execute dmsetup create");
 }
