@@ -67,7 +67,7 @@ fn main() {
         format!(" {} {}", n, optionals.join(" "))
     };
 
-    let table = format!("\"0 {} writeboost {} {}{}\"",
+    let table = format!("0 {} writeboost {} {}{}",
                         backing_dev.size(),
                         backing_dev.name(),
                         caching_dev_name,
@@ -78,8 +78,7 @@ fn main() {
     Command::new("dmsetup")
         .arg("create")
         .arg(wbname)
-        .arg("--table")
-        .arg(table)
+        .arg(format!("--table \'{}\'", table))
         .spawn()
         .expect("Failed to execute dmsetup create");
 }
