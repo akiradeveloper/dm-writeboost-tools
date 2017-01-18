@@ -78,7 +78,7 @@ fn main() {
         .arg("create")
         .arg(wbname)
         .arg("--table")
-        .arg(format!("\"{}\"", table))
+        .arg(table)
         .spawn()
         .expect("Failed to execute dmsetup create");
 }
