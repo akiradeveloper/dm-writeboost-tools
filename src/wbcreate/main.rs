@@ -8,7 +8,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let mut opts = getopts::Options::new();
     opts.optopt("", "writeback_threshold", "todo", "INT");
-    opts.optopt("", "nr_max-batched_writeback", "todo", "INT");
+    opts.optopt("", "nr_max_batched_writeback", "todo", "INT");
     opts.optopt("", "update_sb_record_interval", "todo", "INT");
     opts.optopt("", "sync_data_interval", "todo", "INT");
     opts.optopt("", "read_cache_threshold", "todo", "INT");
