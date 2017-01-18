@@ -1,3 +1,4 @@
+extern crate tempfile;
 extern crate getopts;
 extern crate lib;
 
@@ -73,13 +74,11 @@ fn main() {
                         caching_dev_name,
                         optionals_table);
 
-    println!("[LOG] table={}", table);
-
     Command::new("dmsetup")
         .arg("create")
         .arg(wbname)
         .arg("--table")
-        .arg(format!("\'{}\'", table))
+        .arg(format!("\"{}\"", table))
         .spawn()
         .expect("Failed to execute dmsetup create");
 }
