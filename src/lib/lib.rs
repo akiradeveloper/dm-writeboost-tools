@@ -2,8 +2,12 @@ extern crate byteorder;
 
 use byteorder::{ReadBytesExt, LittleEndian};
 use std::io::Cursor;
+use std::io::Read;
 use std::io::Seek;
 use std::io::SeekFrom;
+use std::fs::File;
+use std::path::Path;
+use std::collections::HashMap;
 
 pub struct BlockDevice {
     name: String
@@ -116,4 +120,37 @@ impl SuperBlockRecord {
             last_writeback_segment_id: last_writeback_segment_id_
         }
     }
+}
+
+#[derive(Debug)]
+pub struct SysDevTable {
+    map: HashMap<String, String>
+}
+
+impl SysDevTable {
+    fn from_file(path: &str) -> SysDevTable {
+        let mut f = File::open(path).unwrap();
+        let mut s = String::new();
+        f.read_to_string(&mut s);
+        let it = s.lines().map (|line| {
+             let v: Vec<&str> = line.split("=").collect();
+             (v[0].to_string(), v[1].to_string())
+        });
+        let mut m = HashMap::new();
+        for (k, v) in it {
+            m.insert(k, v);
+        }
+        SysDevTable {
+            map: m
+        }
+    }
+    fn get(&self, name: &str) -> String {
+        self.map[name].to_string()
+    }
+}
+
+#[test]
+fn test_read_sysdev_file() {
+    let t = SysDevTable::from_file("src/lib/sysdev.0");
+    assert_eq!(t.get("DEVNAME"), "vda1");
 }
