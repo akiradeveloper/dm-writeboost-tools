@@ -53,6 +53,7 @@ fn main() {
         let path = format!("/sys/dev/block/{}/uevent", dm_table.caching_dev);
         let sysdev_table = lib::SysDevTable::from_file(&path);
         let caching_dev_name = sysdev_table.get("DEVNAME");
+        println!("[LOG] dev to zero out={}", caching_dev_name);
         Command::new("dd")
             .arg("if=/dev/zero")
             .arg(format!("of={}", caching_dev_name))

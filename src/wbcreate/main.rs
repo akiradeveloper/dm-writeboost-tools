@@ -1,4 +1,3 @@
-extern crate tempfile;
 extern crate getopts;
 extern crate lib;
 

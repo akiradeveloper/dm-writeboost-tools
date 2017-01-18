@@ -163,7 +163,7 @@ pub struct DMTable {
 impl DMTable {
     pub fn parse(line: String) -> DMTable {
         let line: Vec<String> = line.split(" ").filter(|x| x != &"").map(|x| x.to_string()).collect();
-        println!("{:?}", line);
+        println!("[LOG] {:?}", line);
         DMTable {
             backing_dev: line[3].clone(),
             caching_dev: line[4].clone()
