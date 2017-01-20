@@ -173,6 +173,33 @@ impl DMTable {
     }
 }
 
+struct WBDev {
+    name: String
+}
+
+use std::process::Command;
+impl WBDev {
+    pub fn new(name_: String) -> WBDev {
+        WBDev {
+            name: name_
+        }
+    }
+    pub fn caching_dev_name(&self) -> String {
+        let output = Command::new("dmsetup")
+            .arg("table")
+            .arg(&self.name)
+            .output()
+            .expect("Fail to dmsetup table")
+            .stdout;
+        let output = String::from_utf8(output).expect("invalid utf8 output").to_string();
+        let output = output.trim().to_string();
+        let dm_table = DMTable::parse(output);
+        let path = format!("/sys/dev/block/{}/uevent", dm_table.caching_dev);
+        let sysdev_table = SysDevTable::from_file(&path);
+        sysdev_table.get("DEVNAME")
+    }
+}
+
 #[test]
 fn test_dmtable_parse() {
     let mut s = String::new();
