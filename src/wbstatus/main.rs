@@ -1,6 +1,17 @@
+extern crate clap;
+
+use clap::{Arg, App};
+
 use std::io::{self, Read};
 
 fn main() {
+    let matches = App::new("wbstatus")
+        .version("0.1")
+        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .about("Pretty-print the dmsetup status output")
+        .usage("dmsetup status wbdev | wbstatus")
+        .get_matches();
+
     let mut buf = String::new();
     io::stdin().read_to_string(&mut buf).unwrap();
 
