@@ -173,7 +173,7 @@ impl DMTable {
     }
 }
 
-struct WBDev {
+pub struct WBDev {
     name: String
 }
 
