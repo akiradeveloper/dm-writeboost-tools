@@ -1,24 +1,30 @@
+extern crate clap;
 extern crate getopts;
 extern crate lib;
 
 use std::process::Command;
 use std::env;
+use clap::{Arg, App};
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let mut opts = getopts::Options::new();
-    opts.optflag("", "noflush", "Don't flush RAM buffer to caching device before removing");
-    opts.optflag("", "nowriteback", "Don't write back dirty caches to the backing device before removing");
-    opts.optflag("h", "help", "todo");
-    let matches = opts.parse(&args[1..]).expect("Couldn't parse args");
+    let matches = App::new("wbremove")
+        .version("0.1")
+        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .about("Remove a writeboost device")
+        .arg(Arg::with_name("LVNAME")
+             .required(true)
+             .index(1))
+        .arg(Arg::with_name("noflush")
+             .help("Don't flush RAM buffer to caching device before removing")
+             .long("noflush"))
+        .arg(Arg::with_name("nowriteback")
+             .help("Don't write back dirty caches to the backing device before removing")
+             .long("nowriteback"))
+        .get_matches();
 
-    if matches.free.len() != 1 {
-        panic!("Too much or less essential parameters (should be two)");
-    }
+    let wbname = matches.value_of("LVNAME").unwrap().to_string();
 
-    let wbname = matches.free[0].clone();
-
-    if !matches.opt_present("noflush") {
+    if !matches.is_present("noflush") {
         Command::new("dmsetup")
             .arg("suspend")
             .arg(&wbname)
@@ -32,7 +38,7 @@ fn main() {
             .expect("Failed to flush transient data");
     }
 
-    if !matches.opt_present("nowriteback") {
+    if !matches.is_present("nowriteback") {
         Command::new("dmsetup")
             .arg("message")
             .arg(&wbname)
