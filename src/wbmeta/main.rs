@@ -1,3 +1,4 @@
+extern crate clap;
 extern crate getopts;
 extern crate lib;
 
@@ -7,18 +8,24 @@ use std::fs::File;
 use std::io::Seek;
 use std::io::SeekFrom;
 use std::io::Read;
+use clap::{Arg, App};
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let mut opts = getopts::Options::new();
-    opts.optflag("h", "help", "todo");
-    let matches = opts.parse(&args[1..]).expect("couldn't parse args");
-    if matches.free.len() != 2 {
-        panic!("too much or less essential parameters (should be two)");
-    }
+    let matches = App::new("wbmeta")
+        .version("0.1")
+        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .about("Dump a cache block")
+        .arg(Arg::with_name("CACHEDEV")
+             .required(true)
+             .index(1))
+        .arg(Arg::with_name("SEGID")
+             .help("segment id")
+             .required(true)
+             .index(2))
+        .get_matches();
 
-    let devname: String = matches.free[0].clone();
-    let id: i32 = i32::from_str(&matches.free[1].clone()).expect("id should be int");
+    let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
+    let id: i32 = i32::from_str(matches.value_of("SEGID").unwrap()).expect("segment id should be int");
 
     let dev = lib::BlockDevice::new(devname.to_owned());
 
