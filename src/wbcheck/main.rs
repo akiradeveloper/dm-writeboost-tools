@@ -51,6 +51,10 @@ fn main() {
         lib::SegmentHeader::from_buf(&buf)
     };
 
+    if header.uninitialized() {
+        std::process::exit(0);
+    }
+
     let computed = {
         let size: usize = (4096 - 512) + ((header.length as usize) << 12);
         let mut buf = vec![0;size];

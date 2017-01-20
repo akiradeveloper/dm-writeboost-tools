@@ -63,6 +63,9 @@ impl SegmentHeader {
             length: length_
         }
     }
+    pub fn uninitialized(&self) -> bool {
+        self.id == 0
+    }
 }
 
 pub struct Metablock {
