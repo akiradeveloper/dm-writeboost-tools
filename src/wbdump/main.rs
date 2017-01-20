@@ -1,20 +1,31 @@
+extern crate clap;
 extern crate getopts;
 extern crate lib;
 
 use std::env;
 use std::str::FromStr;
+use clap::{Arg, App};
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let mut opts = getopts::Options::new();
-    opts.optflag("", "baseid", "todo");
-    opts.optflag("h", "help", "todo");
-    let matches = opts.parse(&args[1..]).expect("couldn't parse args");
-    if matches.free.len() != 2 {
-        panic!("too much or less essential parameters (should be two)");
-    }
-    let devname: String = matches.free[0].clone();
-    let mb_idx: i32 = i32::from_str(&matches.free[1].clone()).expect("idx should be int");
+    let matches = App::new("wbdump")
+        .version("0.1")
+        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .about("Dump a cache block")
+        .arg(Arg::with_name("CACHEDEV")
+             .required(true)
+             .index(1))
+        .arg(Arg::with_name("MBIDX")
+             .help("metablock index")
+             .required(true)
+             .index(2))
+        .arg(Arg::with_name("baseid")
+             .help("MBIDX is relative to this SEGID (default is 1)")
+             .long("baseid")
+             .takes_value(true))
+        .get_matches();
+
+    let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
+    let mb_idx: i32 = i32::from_str(matches.value_of("MBIDX").unwrap()).expect("metablock index should be int");
     let dev = lib::BlockDevice::new(devname.to_owned());
 
     let mut base_id = 1;
