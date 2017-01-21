@@ -19,7 +19,7 @@ fn main() {
              .required(true)
              .index(2))
         .arg(Arg::with_name("CACHEDEV")
-             .help("Path to the cache dev")
+             .help("Path to the cache device")
              .required(true)
              .index(3))
         .arg(Arg::with_name("reformat")
