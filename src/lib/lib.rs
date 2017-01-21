@@ -7,7 +7,6 @@ use std::io::Cursor;
 use std::io::Read;
 use std::io::Seek;
 use std::io::SeekFrom;
-use std::path::Path;
 use std::process::Command;
 
 pub struct BlockDevice {
@@ -31,11 +30,11 @@ impl BlockDevice {
             .arg("--getsize")
             .arg(&self.name())
             .output()
-            .expect(&format!("failed to get the size of {}", self.name()))
+            .expect(&format!("Failed to get the size of {}", self.name()))
             .stdout;
-        let output = String::from_utf8(output).expect("invalid utf8 output").to_string();
+        let output = String::from_utf8(output).expect("Invalid utf8 output").to_string();
         let output = output.trim_right();
-        i32::from_str(output).expect("couldn't parse as i32")
+        i32::from_str(output).expect("Couldn't parse as i32")
     }
     fn nr_segments(&self) -> i32 {
         (self.size() - (1 << 11)) / (1 << 10)
@@ -135,7 +134,7 @@ impl SysDevTable {
     pub fn from_file(path: &str) -> SysDevTable {
         let mut f = File::open(path).unwrap();
         let mut s = String::new();
-        f.read_to_string(&mut s);
+        f.read_to_string(&mut s).unwrap();
         let it = s.lines().map (|line| {
              let v: Vec<&str> = line.split("=").collect();
              (v[0].to_string(), v[1].to_string())
@@ -175,7 +174,7 @@ impl BlockNumber {
 
 pub struct DMTable {
     pub backing_dev: BlockNumber,
-    pub caching_dev: BlockNumber
+    pub cache_dev: BlockNumber
 }
 
 impl DMTable {
@@ -185,7 +184,7 @@ impl DMTable {
             backing_dev: BlockNumber {
                 value: line[3].clone()
             },
-            caching_dev: BlockNumber {
+            cache_dev: BlockNumber {
                 value: line[4].clone()
             }
         }
@@ -196,11 +195,11 @@ impl DMTable {
 fn test_dmtable_parse() {
     let mut s = String::new();
     let mut f = File::open("data/sample.table.226").unwrap();
-    f.read_to_string(&mut s);
+    f.read_to_string(&mut s).unwrap();
     let t = DMTable::parse(s.trim().to_string());
     println!("{}", s.clone());
-    assert_eq!(t.backing_dev, "251:0");
-    assert_eq!(t.caching_dev, "251:3");
+    assert_eq!(t.backing_dev.unwrap(), "251:0");
+    assert_eq!(t.cache_dev.unwrap(), "251:3");
 }
 
 pub struct WBDev {
@@ -220,7 +219,7 @@ impl WBDev {
             .output()
             .expect("Fail to dmsetup table")
             .stdout;
-        let output = String::from_utf8(output).expect("invalid utf8 output").to_string();
+        let output = String::from_utf8(output).expect("Invalid utf8 output").to_string();
         let output = output.trim().to_string();
         DMTable::parse(output)
     }

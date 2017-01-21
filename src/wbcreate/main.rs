@@ -2,29 +2,28 @@ extern crate clap;
 extern crate getopts;
 extern crate lib;
 
-use std::env;
 use std::process::Command;
 use clap::{Arg, App};
 
 fn main() {
     let matches = App::new("wbcreate")
         .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Create a writeboost device")
         .arg(Arg::with_name("LVNAME")
-             .help("name of the writeboost device")
+             .help("Name of the writeboost device")
              .required(true)
              .index(1))
         .arg(Arg::with_name("BACKINGDEV")
-             .help("path to the backing device")
+             .help("Path to the backing device")
              .required(true)
              .index(2))
         .arg(Arg::with_name("CACHEDEV")
-             .help("path to the caching dev")
+             .help("Path to the cache dev")
              .required(true)
              .index(3))
         .arg(Arg::with_name("reformat")
-             .help("Reformat the caching device. This cleans up all existing cache blocks")
+             .help("Reformat the cache device. This cleans up all existing cache blocks")
              .long("reformat"))
         .arg(Arg::with_name("write_around_mode")
              .long("write_around_mode"))

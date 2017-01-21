@@ -4,7 +4,6 @@ extern crate getopts;
 extern crate lib;
 
 use clap::{Arg, App};
-use std::env;
 use std::fs::File;
 use std::io::Seek;
 use std::io::SeekFrom;
@@ -24,23 +23,23 @@ fn test_checksum() {
 fn main() {
     let matches = App::new("wbcheck")
         .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Check if the segment is broken")
         .arg(Arg::with_name("CACHEDEV")
-             .help("name of the caching device")
+             .help("Name of the cache device")
              .required(true)
              .index(1))
         .arg(Arg::with_name("SEGID")
-             .help("segment id")
+             .help("Segment id")
              .required(true)
              .index(2))
         .get_matches();
 
     let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
-    let id: i32 = i32::from_str(matches.value_of("SEGID").unwrap()).expect("id should be int");
+    let id: i32 = i32::from_str(matches.value_of("SEGID").unwrap()).expect("Segment id should be int");
     let dev = lib::BlockDevice::new(devname.to_owned());
 
-    let mut f = File::open(&devname).expect(&format!("device {} not found", &devname));
+    let mut f = File::open(&devname).expect(&format!("Device {} not found", &devname));
 
     let start_byte: u64 = (dev.calc_segment_start(id) as u64) << 9;
     f.seek(SeekFrom::Start(start_byte)).unwrap();
@@ -63,6 +62,6 @@ fn main() {
     };
 
     if computed != header.checksum {
-        panic!(format!("checksum is broken. computed={}, expected={}", computed, header.checksum));
+        panic!(format!("Checksum is broken. computed={}, expected={}", computed, header.checksum));
     }
 }

@@ -3,19 +3,19 @@ extern crate getopts;
 extern crate lib;
 
 use clap::{Arg, App};
-use std::env;
 use std::str::FromStr;
 
 fn main() {
     let matches = App::new("wbdump")
         .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Dump a cache block")
         .arg(Arg::with_name("CACHEDEV")
+             .help("Path to the cache device")
              .required(true)
              .index(1))
         .arg(Arg::with_name("MBIDX")
-             .help("metablock index")
+             .help("Metablock index")
              .required(true)
              .index(2))
         .arg(Arg::with_name("baseid")

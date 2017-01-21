@@ -1,12 +1,12 @@
 extern crate clap;
 
-use clap::{Arg, App};
+use clap::App;
 use std::io::{self, Read};
 
 fn main() {
-    let matches = App::new("wbstatus")
+    App::new("wbstatus")
         .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Pretty-print the dmsetup status output")
         .usage("dmsetup status wbdev | wbstatus")
         .get_matches();

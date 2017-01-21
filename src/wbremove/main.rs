@@ -3,19 +3,19 @@ extern crate getopts;
 extern crate lib;
 
 use clap::{Arg, App};
-use std::env;
 use std::process::Command;
 
 fn main() {
     let matches = App::new("wbremove")
         .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
+        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Remove a writeboost device")
         .arg(Arg::with_name("LVNAME")
+             .help("Name of the writeboost device")
              .required(true)
              .index(1))
         .arg(Arg::with_name("noflush")
-             .help("Don't flush RAM buffer to caching device before removing")
+             .help("Don't flush RAM buffer to cache device before removing")
              .long("noflush"))
         .arg(Arg::with_name("nowriteback")
              .help("Don't write back dirty caches to the backing device before removing")
@@ -57,15 +57,15 @@ fn main() {
         .expect("Failed to execute dmsetup create");
 
     if will_writeback {
-        let caching_dev_name = lib::WBDev::new(wbname.to_string())
+        let cache_dev_name = lib::WBDev::new(wbname.to_string())
             .table()
-            .caching_dev
+            .cache_dev
             .sys_dev_table()
             .get("DEVNAME");
 
         Command::new("dd")
             .arg("if=/dev/zero")
-            .arg(format!("of={}", caching_dev_name))
+            .arg(format!("of={}", cache_dev_name))
             .arg("bs=512")
             .arg("count=1")
             .spawn()

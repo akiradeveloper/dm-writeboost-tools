@@ -3,7 +3,6 @@ extern crate getopts;
 extern crate lib;
 
 use clap::{Arg, App};
-use std::env;
 use std::fs::File;
 use std::io::Seek;
 use std::io::SeekFrom;
@@ -13,19 +12,20 @@ use std::str::FromStr;
 fn main() {
     let matches = App::new("wbmeta")
         .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
-        .about("Dump a cache block")
+        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
+        .about("Dump a segment header")
         .arg(Arg::with_name("CACHEDEV")
+             .help("Path to the cache device")
              .required(true)
              .index(1))
         .arg(Arg::with_name("SEGID")
-             .help("segment id")
+             .help("Segment id")
              .required(true)
              .index(2))
         .get_matches();
 
     let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
-    let id: i32 = i32::from_str(matches.value_of("SEGID").unwrap()).expect("segment id should be int");
+    let id: i32 = i32::from_str(matches.value_of("SEGID").unwrap()).expect("Segment id should be int");
 
     let dev = lib::BlockDevice::new(devname.to_owned());
 
@@ -41,14 +41,14 @@ fn main() {
             "unformatted"
         };
 
-        println!("superblock header:");
+        println!("[superblock header]");
         println!("magic = {} ({})", sup_header.magic, s);
 
         f.seek(SeekFrom::Start((1u64 << 20) - 512)).unwrap();
         f.read(&mut buf).unwrap();
         let sup_record = lib::SuperBlockRecord::from_buf(&buf);
 
-        println!("superblock record:");
+        println!("[superblock record]");
         println!("last writeback id = {}", sup_record.last_writeback_segment_id);
     } else { // header
         let mut buf = [0;4096];
@@ -58,7 +58,7 @@ fn main() {
         f.read(&mut buf).unwrap();
         let (header, metablocks) = lib::Segment::from_buf(&buf);
 
-        println!("segment header:");
+        println!("[segment header]");
         println!("id        = {}", header.id);
         println!("checksumx = {}", header.checksum);
         println!("length    = {}", header.length);
