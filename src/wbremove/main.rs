@@ -38,7 +38,9 @@ fn main() {
             .expect("Failed to flush transient data");
     }
 
-    if !matches.is_present("nowriteback") {
+    let will_writeback = !matches.is_present("nowriteback");
+
+    if will_writeback {
         Command::new("dmsetup")
             .arg("message")
             .arg(&wbname)
@@ -46,6 +48,15 @@ fn main() {
             .arg("drop_caches")
             .spawn()
             .expect("Failed to drop caches");
+    }
+
+    Command::new("dmsetup")
+        .arg("remove")
+        .arg(&wbname)
+        .spawn()
+        .expect("Failed to execute dmsetup create");
+
+    if will_writeback {
         let caching_dev_name = lib::WBDev::new(wbname.to_string())
             .table()
             .caching_dev
@@ -60,10 +71,4 @@ fn main() {
             .spawn()
             .expect("Failed to zero out the caching device");
     }
-
-    Command::new("dmsetup")
-        .arg("remove")
-        .arg(&wbname)
-        .spawn()
-        .expect("Failed to execute dmsetup create");
 }
