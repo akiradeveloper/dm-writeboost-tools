@@ -65,7 +65,7 @@ fn main() {
     if will_writeback {
         Command::new("dd")
             .arg("if=/dev/zero")
-            .arg(format!("of={}", cache_dev_name))
+            .arg(format!("of=/dev/{}", cache_dev_name))
             .arg("bs=512")
             .arg("count=1")
             .spawn()
