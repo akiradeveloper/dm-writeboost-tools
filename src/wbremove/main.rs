@@ -50,19 +50,19 @@ fn main() {
             .expect("Failed to drop caches");
     }
 
+    let cache_dev_name = lib::WBDev::new(wbname.to_string())
+        .table()
+        .cache_dev
+        .sys_dev_table()
+        .get("DEVNAME");
+
     Command::new("dmsetup")
         .arg("remove")
         .arg(&wbname)
         .spawn()
-        .expect("Failed to execute dmsetup create");
+        .expect("Failed to execute dmsetup remove");
 
     if will_writeback {
-        let cache_dev_name = lib::WBDev::new(wbname.to_string())
-            .table()
-            .cache_dev
-            .sys_dev_table()
-            .get("DEVNAME");
-
         Command::new("dd")
             .arg("if=/dev/zero")
             .arg(format!("of={}", cache_dev_name))
