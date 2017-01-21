@@ -46,11 +46,15 @@ fn main() {
             .arg("drop_caches")
             .spawn()
             .expect("Failed to drop caches");
+        let caching_dev_name = lib::WBDev::new(wbname.to_string())
+            .table()
+            .caching_dev
+            .sys_dev_table()
+            .get("DEVNAME");
 
-        let wbdev = lib::WBDev::new(wbname.to_string());
         Command::new("dd")
             .arg("if=/dev/zero")
-            .arg(format!("of={}", wbdev.caching_dev_name()))
+            .arg(format!("of={}", caching_dev_name))
             .arg("bs=512")
             .arg("count=1")
             .spawn()

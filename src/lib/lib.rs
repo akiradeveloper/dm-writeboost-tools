@@ -7,6 +7,7 @@ use std::io::Seek;
 use std::io::SeekFrom;
 use std::fs::File;
 use std::path::Path;
+use std::process::Command;
 use std::collections::HashMap;
 
 pub struct BlockDevice {
@@ -158,17 +159,35 @@ fn test_read_sysdev_file() {
     assert_eq!(t.get("DEVNAME"), "vda1");
 }
 
+pub struct BlockNumber {
+    value: String
+}
+
+impl BlockNumber {
+    pub fn unwrap(&self) -> String {
+        self.value.to_owned()
+    }
+    pub fn sys_dev_table(&self) -> SysDevTable {
+        let path = format!("/sys/dev/block/{}/uevent", self.value);
+        SysDevTable::from_file(&path)
+    }
+}
+
 pub struct DMTable {
-    pub backing_dev: String,
-    pub caching_dev: String
+    pub backing_dev: BlockNumber,
+    pub caching_dev: BlockNumber
 }
 
 impl DMTable {
     pub fn parse(line: String) -> DMTable {
         let line: Vec<String> = line.split(" ").filter(|x| x != &"").map(|x| x.to_string()).collect();
         DMTable {
-            backing_dev: line[3].clone(),
-            caching_dev: line[4].clone()
+            backing_dev: BlockNumber {
+                value: line[3].clone()
+            },
+            caching_dev: BlockNumber {
+                value: line[4].clone()
+            }
         }
     }
 }
@@ -177,14 +196,13 @@ pub struct WBDev {
     name: String
 }
 
-use std::process::Command;
 impl WBDev {
     pub fn new(name_: String) -> WBDev {
         WBDev {
             name: name_
         }
     }
-    pub fn caching_dev_name(&self) -> String {
+    pub fn table(&self) -> DMTable {
         let output = Command::new("dmsetup")
             .arg("table")
             .arg(&self.name)
@@ -193,10 +211,7 @@ impl WBDev {
             .stdout;
         let output = String::from_utf8(output).expect("invalid utf8 output").to_string();
         let output = output.trim().to_string();
-        let dm_table = DMTable::parse(output);
-        let path = format!("/sys/dev/block/{}/uevent", dm_table.caching_dev);
-        let sysdev_table = SysDevTable::from_file(&path);
-        sysdev_table.get("DEVNAME")
+        DMTable::parse(output)
     }
 }
 
