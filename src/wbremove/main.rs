@@ -69,6 +69,6 @@ fn main() {
             .arg("bs=512")
             .arg("count=1")
             .spawn()
-            .expect("Failed to zero out the caching device");
+            .expect("Failed to zero out the cache device");
     }
 }

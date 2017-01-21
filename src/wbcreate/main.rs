@@ -54,16 +54,16 @@ fn main() {
          let name = matches.value_of("BACKINGDEV").unwrap().to_string();
          lib::BlockDevice::new(name)
     };
-    let caching_dev_name = matches.value_of("CACHEDEV").unwrap().to_string();
+    let cache_dev_name = matches.value_of("CACHEDEV").unwrap().to_string();
 
     if matches.is_present("reformat") {
         Command::new("dd")
             .arg("if=/dev/zero")
-            .arg(format!("of={}", caching_dev_name))
+            .arg(format!("of={}", cache_dev_name))
             .arg("bs=512")
             .arg("count=1")
             .spawn()
-            .expect("Failed to zero out the caching device");
+            .expect("Failed to zero out the cache device");
     }
 
     let mut optionals: Vec<String> = Vec::new();
@@ -98,7 +98,7 @@ fn main() {
     let table = format!("0 {} writeboost {} {}{}",
                         backing_dev.size(),
                         backing_dev.name(),
-                        caching_dev_name,
+                        cache_dev_name,
                         optionals_table);
 
     Command::new("dmsetup")
