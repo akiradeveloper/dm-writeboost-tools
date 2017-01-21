@@ -1,5 +1,4 @@
 extern crate clap;
-extern crate getopts;
 extern crate lib;
 
 use clap::{Arg, App};

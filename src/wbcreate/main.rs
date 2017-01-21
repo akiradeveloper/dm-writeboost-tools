@@ -1,5 +1,4 @@
 extern crate clap;
-extern crate getopts;
 extern crate lib;
 
 use std::process::Command;
