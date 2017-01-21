@@ -11,10 +11,6 @@ https://github.com/rust-lang-nursery/rustup.rs
 
 Then `cargo install` to install the commands.
 
-## Video
-
-![Usage Video](http://rawgit.com/akiradeveloper/dm-writeboost-tools/master/usage.gif)
-
 ## Commands (Lexicographical order)
 
 ### wbcheck

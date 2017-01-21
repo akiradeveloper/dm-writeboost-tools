@@ -27,7 +27,7 @@ impl BlockDevice {
         use std::str::FromStr;
         let output: Vec<u8> =
             Command::new("blockdev")
-            .arg("--getsize")
+            .arg("--getsz")
             .arg(&self.name())
             .output()
             .expect(&format!("Failed to get the size of {}", self.name()))
