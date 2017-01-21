@@ -78,12 +78,9 @@ fn main() {
         "sync_data_interval",
         "read_cache_threshold"];
     for name in &tunables {
-        match matches.value_of(name) {
-            Some(value) => {
-                optionals.push(name.to_string());
-                optionals.push(value.to_string());
-            }
-            _ => {}
+        if let Some(value) = matches.value_of(name) {
+            optionals.push(name.to_string());
+            optionals.push(value.to_string());
         }
     }
 
