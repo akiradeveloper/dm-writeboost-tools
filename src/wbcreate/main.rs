@@ -57,13 +57,14 @@ fn main() {
     let cache_dev_name = matches.value_of("CACHEDEV").unwrap().to_string();
 
     if matches.is_present("reformat") {
-        Command::new("dd")
+        let status = Command::new("dd")
             .arg("if=/dev/zero")
             .arg(format!("of={}", cache_dev_name))
             .arg("bs=512")
             .arg("count=1")
-            .spawn()
+            .status()
             .expect("Failed to zero out the cache device");
+        assert!(status.success());
     }
 
     let mut optionals: Vec<String> = Vec::new();
@@ -101,11 +102,12 @@ fn main() {
                         cache_dev_name,
                         optionals_table);
 
-    Command::new("dmsetup")
+    let status = Command::new("dmsetup")
         .arg("create")
         .arg(wbname)
         .arg("--table")
         .arg(table)
-        .spawn()
+        .status()
         .expect("Failed to execute dmsetup create");
+    assert!(status.success());
 }

@@ -25,29 +25,32 @@ fn main() {
     let wbname = matches.value_of("LVNAME").unwrap().to_string();
 
     if !matches.is_present("noflush") {
-        Command::new("dmsetup")
+        let status = Command::new("dmsetup")
             .arg("suspend")
             .arg(&wbname)
-            .spawn()
+            .status()
             .expect("Failed to flush transient data");
+        assert!(status.success());
 
-        Command::new("dmsetup")
+        let status = Command::new("dmsetup")
             .arg("resume")
             .arg(&wbname)
-            .spawn()
+            .status()
             .expect("Failed to flush transient data");
+        assert!(status.success());
     }
 
     let will_writeback = !matches.is_present("nowriteback");
 
     if will_writeback {
-        Command::new("dmsetup")
+        let status = Command::new("dmsetup")
             .arg("message")
             .arg(&wbname)
             .arg("0")
             .arg("drop_caches")
-            .spawn()
+            .status()
             .expect("Failed to drop caches");
+        assert!(status.success());
     }
 
     let cache_dev_name = lib::WBDev::new(wbname.to_string())
@@ -56,19 +59,21 @@ fn main() {
         .sys_dev_table()
         .get("DEVNAME");
 
-    Command::new("dmsetup")
+    let status = Command::new("dmsetup")
         .arg("remove")
         .arg(&wbname)
-        .spawn()
+        .status()
         .expect("Failed to execute dmsetup remove");
+    assert!(status.success());
 
     if will_writeback {
-        Command::new("dd")
+        let status = Command::new("dd")
             .arg("if=/dev/zero")
             .arg(format!("of=/dev/{}", cache_dev_name))
             .arg("bs=512")
             .arg("count=1")
-            .spawn()
+            .status()
             .expect("Failed to zero out the cache device");
+        assert!(status.success());
     }
 }
