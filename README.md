@@ -13,7 +13,7 @@ Then `cargo install` to install the commands.
 
 ## Video
 
-[[ http://rawgit.com/akiradeveloper/dm-writeboost-tools/master/usage.gif | height = 600px ]]
+[Usage Video](http://rawgit.com/akiradeveloper/dm-writeboost-tools/master/usage.gif)
 
 ## Commands (Lexicographical order)
 
