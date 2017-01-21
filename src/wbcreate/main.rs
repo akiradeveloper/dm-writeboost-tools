@@ -2,13 +2,13 @@ extern crate clap;
 extern crate getopts;
 extern crate lib;
 
-use std::process::Command;
 use std::env;
+use std::process::Command;
 use clap::{Arg, App};
 
 fn main() {
     let matches = App::new("wbcreate")
-        .version("0.1")
+        .version("1.0.0")
         .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
         .about("Create a writeboost device")
         .arg(Arg::with_name("LVNAME")

@@ -2,13 +2,13 @@ extern crate clap;
 extern crate getopts;
 extern crate lib;
 
-use std::process::Command;
-use std::env;
 use clap::{Arg, App};
+use std::env;
+use std::process::Command;
 
 fn main() {
     let matches = App::new("wbremove")
-        .version("0.1")
+        .version("1.0.0")
         .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
         .about("Remove a writeboost device")
         .arg(Arg::with_name("LVNAME")

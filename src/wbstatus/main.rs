@@ -1,21 +1,21 @@
 extern crate clap;
 
 use clap::{Arg, App};
-
 use std::io::{self, Read};
 
 fn main() {
     let matches = App::new("wbstatus")
-        .version("0.1")
+        .version("1.0.0")
         .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
         .about("Pretty-print the dmsetup status output")
         .usage("dmsetup status wbdev | wbstatus")
         .get_matches();
 
     let mut buf = String::new();
-    io::stdin().read_to_string(&mut buf).unwrap();
-
-    let toks: Vec<&str> = buf.split_whitespace().collect();
+    let toks: Vec<&str> = {
+        io::stdin().read_to_string(&mut buf).unwrap();
+        buf.split_whitespace().collect()
+    };
 
     println!("cursor pos              = {}", toks[3]);
     println!("# of cache blocks       = {}", toks[4]);

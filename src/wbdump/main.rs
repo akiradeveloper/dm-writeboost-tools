@@ -2,13 +2,13 @@ extern crate clap;
 extern crate getopts;
 extern crate lib;
 
+use clap::{Arg, App};
 use std::env;
 use std::str::FromStr;
-use clap::{Arg, App};
 
 fn main() {
     let matches = App::new("wbdump")
-        .version("0.1")
+        .version("1.0.0")
         .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
         .about("Dump a cache block")
         .arg(Arg::with_name("CACHEDEV")
@@ -24,9 +24,11 @@ fn main() {
              .takes_value(true))
         .get_matches();
 
-    let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
     let mb_idx: i32 = i32::from_str(matches.value_of("MBIDX").unwrap()).expect("metablock index should be int");
-    let dev = lib::BlockDevice::new(devname.to_owned());
+    let dev = { 
+        let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
+        lib::BlockDevice::new(devname.to_owned())
+    };
 
     let mut base_id = 1;
     base_id += mb_idx / 127;

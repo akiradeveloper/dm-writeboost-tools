@@ -1,15 +1,15 @@
 extern crate clap;
-extern crate getopts;
 extern crate crc;
+extern crate getopts;
 extern crate lib;
 
+use clap::{Arg, App};
 use std::env;
-use std::str::FromStr;
 use std::fs::File;
 use std::io::Seek;
 use std::io::SeekFrom;
 use std::io::Read;
-use clap::{Arg, App};
+use std::str::FromStr;
 
 fn checksum(data: &[u8]) -> u32 {
     crc::crc32::checksum_castagnoli(data)
@@ -23,7 +23,7 @@ fn test_checksum() {
 
 fn main() {
     let matches = App::new("wbcheck")
-        .version("0.1")
+        .version("1.0.0")
         .author("Akira Hayakawa <ruby.wkkt@gmail.com>")
         .about("Check if the segment is broken")
         .arg(Arg::with_name("CACHEDEV")

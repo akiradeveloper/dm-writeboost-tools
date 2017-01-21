@@ -1,14 +1,14 @@
 extern crate byteorder;
 
 use byteorder::{ReadBytesExt, LittleEndian};
+use std::collections::HashMap;
+use std::fs::File;
 use std::io::Cursor;
 use std::io::Read;
 use std::io::Seek;
 use std::io::SeekFrom;
-use std::fs::File;
 use std::path::Path;
 use std::process::Command;
-use std::collections::HashMap;
 
 pub struct BlockDevice {
     name: String
@@ -192,6 +192,17 @@ impl DMTable {
     }
 }
 
+#[test]
+fn test_dmtable_parse() {
+    let mut s = String::new();
+    let mut f = File::open("data/sample.table.226").unwrap();
+    f.read_to_string(&mut s);
+    let t = DMTable::parse(s.trim().to_string());
+    println!("{}", s.clone());
+    assert_eq!(t.backing_dev, "251:0");
+    assert_eq!(t.caching_dev, "251:3");
+}
+
 pub struct WBDev {
     name: String
 }
@@ -213,15 +224,4 @@ impl WBDev {
         let output = output.trim().to_string();
         DMTable::parse(output)
     }
-}
-
-#[test]
-fn test_dmtable_parse() {
-    let mut s = String::new();
-    let mut f = File::open("data/sample.table.226").unwrap();
-    f.read_to_string(&mut s);
-    let t = DMTable::parse(s.trim().to_string());
-    println!("{}", s.clone());
-    assert_eq!(t.backing_dev, "251:0");
-    assert_eq!(t.caching_dev, "251:3");
 }
