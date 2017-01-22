@@ -3,18 +3,9 @@ extern crate clap;
 use clap::App;
 use std::io::{self, Read};
 
-fn main() {
-    App::new("wbstatus")
-        .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
-        .about("Pretty-print the dmsetup status output")
-        .usage("dmsetup status wbdev | wbstatus")
-        .get_matches();
-
-    let mut buf = String::new();
+fn print_status(s: &str) {
     let toks: Vec<&str> = {
-        io::stdin().read_to_string(&mut buf).unwrap();
-        buf.split_whitespace().collect()
+        s.split_whitespace().collect()
     };
 
     println!("cursor pos              = {}", toks[3]);
@@ -40,3 +31,24 @@ fn main() {
     }
 }
 
+#[test]
+fn test_print_status() {
+    let mut buf = String::new();
+    let mut f = std::fs::File::open("data/sample.status.226").unwrap();
+    f.read_to_string(&mut buf).unwrap();
+    print_status(&buf);
+}
+
+fn main() {
+    App::new("wbstatus")
+        .version("1.0.0")
+        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
+        .about("Pretty-print the dmsetup status output")
+        .usage("dmsetup status wbdev | wbstatus")
+        .get_matches();
+
+    let mut buf = String::new();
+    io::stdin().read_to_string(&mut buf).unwrap();
+
+    print_status(&buf);
+}
