@@ -1,5 +1,7 @@
 # dm-writeboost-tools
 
+[![Join the chat at https://gitter.im/akiradeveloper/dm-writeboost-tools](https://badges.gitter.im/akiradeveloper/dm-writeboost-tools.svg)](https://gitter.im/akiradeveloper/dm-writeboost-tools?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Commandset to help users of [dm-writeboost](https://github.com/akiradeveloper/dm-writeboost)
 to analyze and report bugs. Written in Rust. 
 
