@@ -11,6 +11,10 @@ https://github.com/rust-lang-nursery/rustup.rs
 
 Then `cargo install` to install the commands.
 
+## Video
+
+https://www.youtube.com/watch?v=0IkTA8KJ-hU
+
 ## Commands (Lexicographical order)
 
 ### wbcheck
