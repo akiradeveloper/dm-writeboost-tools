@@ -153,8 +153,8 @@ impl SysDevTable {
 }
 
 #[test]
-fn test_read_sysdev_file() {
-    let t = SysDevTable::from_file("data/sysdev.0");
+fn test_read_sys_dev_file() {
+    let t = SysDevTable::from_file("data/sys_dev.0");
     assert_eq!(t.get("DEVNAME"), "vda1");
 }
 
