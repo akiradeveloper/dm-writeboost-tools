@@ -30,6 +30,11 @@ fn main() {
     };
 
     let mut base_id = 1;
+    if let Some(value) = matches.value_of("baseid") {
+        let id = i32::from_str(value).expect("baseid should be int");
+        base_id = id;
+    }
+
     base_id += mb_idx / 127;
     let idx_inseg = mb_idx % 127;
     let start_byte = (dev.calc_segment_start(base_id) << 9) + ((1 + idx_inseg) << 12);
