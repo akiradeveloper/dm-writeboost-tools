@@ -24,9 +24,9 @@ fn main() {
         .get_matches();
 
     let mb_idx: i32 = i32::from_str(matches.value_of("MBIDX").unwrap()).expect("metablock index should be int");
-    let dev = { 
+    let cache_dev = {
         let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
-        lib::BlockDevice::new(devname.to_owned())
+        lib::CacheDevice::new(devname.to_owned())
     };
 
     let mut base_id = 1;
@@ -37,14 +37,14 @@ fn main() {
 
     base_id += mb_idx / 127;
     let idx_inseg = mb_idx % 127;
-    let start_byte = (dev.calc_segment_start(base_id) << 9) + ((1 + idx_inseg) << 12);
+    let start_byte = (cache_dev.calc_segment_start(base_id) << 9) + ((1 + idx_inseg) << 12);
 
     use std::process::Command;
     let output = Command::new("od")
         .arg(format!("-j{}", start_byte))
         .arg("-N4096")
         .arg("-Ax")
-        .arg(&dev.name())
+        .arg(&cache_dev.dev.name())
         .output()
         .expect("failed to execute od")
         .stdout;

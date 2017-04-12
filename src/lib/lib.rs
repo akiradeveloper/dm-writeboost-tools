@@ -22,7 +22,7 @@ impl BlockDevice {
     pub fn name(&self) -> String {
         self.name.to_owned()
     }
-    pub fn size(&self) -> i32 {
+    pub fn size(&self) -> i64 {
         use std::process::Command;
         use std::str::FromStr;
         let output: Vec<u8> =
@@ -34,10 +34,25 @@ impl BlockDevice {
             .stdout;
         let output = String::from_utf8(output).expect("Invalid utf8 output").to_string();
         let output = output.trim_right();
-        i32::from_str(output).expect("Couldn't parse as i32")
+        i64::from_str(output).expect("Couldn't parse as i64")
+    }
+}
+
+pub struct CacheDevice {
+    pub dev: BlockDevice
+}
+
+impl CacheDevice {
+    pub fn new(name: String) -> Self {
+        CacheDevice {
+            dev: BlockDevice::new(name)
+        }
+    }
+    pub fn dev(&self) -> &BlockDevice {
+        &self.dev
     }
     fn nr_segments(&self) -> i32 {
-        (self.size() - (1 << 11)) / (1 << 10)
+        ((self.dev.size() - (1 << 11)) / (1 << 10)) as i32
     }
     pub fn calc_segment_start(&self, id: i32) -> i32 {
         let idx = (id - 1) % self.nr_segments();
