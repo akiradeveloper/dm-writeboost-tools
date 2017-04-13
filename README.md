@@ -56,7 +56,7 @@ Remove a WB device
 
 Pretty-print the status line.
 
-* `dmsetup status wbdev | wb_status`
+* `dmsetup status wbdev | wbstatus`
 
 ## Author
 
