@@ -6,7 +6,7 @@ use std::process::Command;
 
 fn main() {
     let matches = App::new("wbremove")
-        .version("1.0.0")
+        .version(lib::VERSION)
         .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Remove a writeboost device")
         .arg(Arg::with_name("LVNAME")

@@ -10,7 +10,7 @@ use std::str::FromStr;
 
 fn main() {
     let matches = App::new("wbmeta")
-        .version("1.0.0")
+        .version(lib::VERSION)
         .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Dump a segment header")
         .arg(Arg::with_name("CACHEDEV")

@@ -6,7 +6,7 @@ use clap::{Arg, App};
 
 fn main() {
     let matches = App::new("wbcreate")
-        .version("1.0.0")
+        .version(lib::VERSION)
         .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Create a writeboost device")
         .arg(Arg::with_name("LVNAME")

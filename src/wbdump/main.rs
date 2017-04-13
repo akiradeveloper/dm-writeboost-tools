@@ -6,7 +6,7 @@ use std::str::FromStr;
 
 fn main() {
     let matches = App::new("wbdump")
-        .version("1.0.0")
+        .version(lib::VERSION)
         .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Dump a cache block")
         .arg(Arg::with_name("CACHEDEV")

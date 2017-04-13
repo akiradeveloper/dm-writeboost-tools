@@ -21,7 +21,7 @@ fn test_checksum() {
 
 fn main() {
     let matches = App::new("wbcheck")
-        .version("1.0.0")
+        .version(lib::VERSION)
         .author("Akira Hayakawa <ruby.wktk@gmail.com>")
         .about("Check if the segment is broken")
         .arg(Arg::with_name("CACHEDEV")
