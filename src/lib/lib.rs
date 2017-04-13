@@ -10,6 +10,7 @@ use std::io::SeekFrom;
 use std::process::Command;
 
 pub static VERSION: &'static str = "1.0.1";
+pub static AUTHOR: &'static str = "Akira Hayakawa <ruby.wktk@gmail.com>";
 
 pub struct BlockDevice {
     name: String

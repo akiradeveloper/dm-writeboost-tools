@@ -7,7 +7,7 @@ use std::str::FromStr;
 fn main() {
     let matches = App::new("wbdump")
         .version(lib::VERSION)
-        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
+        .author(lib::AUTHOR)
         .about("Dump a cache block")
         .arg(Arg::with_name("CACHEDEV")
              .help("Path to the cache device")

@@ -22,7 +22,7 @@ fn test_checksum() {
 fn main() {
     let matches = App::new("wbcheck")
         .version(lib::VERSION)
-        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
+        .author(lib::AUTHOR)
         .about("Check if the segment is broken")
         .arg(Arg::with_name("CACHEDEV")
              .help("Name of the cache device")

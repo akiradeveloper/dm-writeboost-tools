@@ -43,7 +43,7 @@ fn test_print_status() {
 fn main() {
     App::new("wbstatus")
         .version(lib::VERSION)
-        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
+        .author(lib::AUTHOR)
         .about("Pretty-print the dmsetup status output")
         .usage("dmsetup status wbdev | wbstatus")
         .get_matches();
