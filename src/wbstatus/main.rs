@@ -1,4 +1,5 @@
 extern crate clap;
+extern crate lib;
 
 use clap::App;
 use std::io::{self, Read};
@@ -41,8 +42,8 @@ fn test_print_status() {
 
 fn main() {
     App::new("wbstatus")
-        .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
+        .version(lib::VERSION)
+        .author(lib::AUTHOR)
         .about("Pretty-print the dmsetup status output")
         .usage("dmsetup status wbdev | wbstatus")
         .get_matches();

@@ -10,8 +10,8 @@ use std::str::FromStr;
 
 fn main() {
     let matches = App::new("wbmeta")
-        .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
+        .version(lib::VERSION)
+        .author(lib::AUTHOR)
         .about("Dump a segment header")
         .arg(Arg::with_name("CACHEDEV")
              .help("Path to the cache device")
@@ -26,7 +26,7 @@ fn main() {
     let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
     let id: i32 = i32::from_str(matches.value_of("SEGID").unwrap()).expect("Segment id should be int");
 
-    let dev = lib::BlockDevice::new(devname.to_owned());
+    let cache_dev = lib::CacheDevice::new(devname.to_owned());
 
     if id == 0 { // superblock
         let mut buf = [0;512];
@@ -52,7 +52,7 @@ fn main() {
     } else { // header
         let mut buf = [0;4096];
         let mut f = File::open(&devname).unwrap();
-        let start_byte: u64 = (dev.calc_segment_start(id) as u64) << 9;
+        let start_byte: u64 = (cache_dev.calc_segment_start(id) as u64) << 9;
         f.seek(SeekFrom::Start(start_byte)).unwrap();
         f.read(&mut buf).unwrap();
         let (header, metablocks) = lib::Segment::from_buf(&buf);

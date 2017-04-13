@@ -21,8 +21,8 @@ fn test_checksum() {
 
 fn main() {
     let matches = App::new("wbcheck")
-        .version("1.0.0")
-        .author("Akira Hayakawa <ruby.wktk@gmail.com>")
+        .version(lib::VERSION)
+        .author(lib::AUTHOR)
         .about("Check if the segment is broken")
         .arg(Arg::with_name("CACHEDEV")
              .help("Name of the cache device")
@@ -36,11 +36,11 @@ fn main() {
 
     let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
     let id: i32 = i32::from_str(matches.value_of("SEGID").unwrap()).expect("Segment id should be int");
-    let dev = lib::BlockDevice::new(devname.to_owned());
+    let cache_dev = lib::CacheDevice::new(devname.to_owned());
 
     let mut f = File::open(&devname).expect(&format!("Device {} not found", &devname));
 
-    let start_byte: u64 = (dev.calc_segment_start(id) as u64) << 9;
+    let start_byte: u64 = (cache_dev.calc_segment_start(id) as u64) << 9;
     f.seek(SeekFrom::Start(start_byte)).unwrap();
 
     let header = { 
