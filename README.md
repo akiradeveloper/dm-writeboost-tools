@@ -15,7 +15,7 @@ Then `cargo install` to install the commands.
 
 ## Video
 
-https://www.youtube.com/watch?v=0IkTA8KJ-hU
+https://www.youtube.com/watch?v=QAXbmr2Rf30
 
 ## Commands (Lexicographical order)
 
