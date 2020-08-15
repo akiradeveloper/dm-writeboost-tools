@@ -1,0 +1,6 @@
+version: '2'
+services:
+  dev:
+    image: wbtools:dev
+    volumes:
+      - .:/wbtools-root
