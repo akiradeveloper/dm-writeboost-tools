@@ -4,9 +4,9 @@ version = "1.0.1"
 authors = ["Akira Hayakawa <ruby.wktk@gmail.com>"]
 
 [dependencies]
-crc = "^1.0.0"
+crc = "1"
 byteorder = "1"
-clap = "~2.19.0"
+clap = "2"
 
 [[bin]]
 name = "wbcheck"
