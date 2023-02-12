@@ -1,13 +1,10 @@
 extern crate clap;
-extern crate lib;
 
 use clap::App;
 use std::io::{self, Read};
 
 fn print_status(s: &str) {
-    let toks: Vec<&str> = {
-        s.split_whitespace().collect()
-    };
+    let toks: Vec<&str> = { s.split_whitespace().collect() };
 
     println!("cursor pos              = {}", toks[3]);
     println!("# of cache blocks       = {}", toks[4]);
@@ -28,7 +25,14 @@ fn print_status(s: &str) {
             }
         };
         let v = toks[10 + i];
-        println!("{}      {}    {}          {}         {}", b(3), b(2), b(1), b(0), v);
+        println!(
+            "{}      {}    {}          {}         {}",
+            b(3),
+            b(2),
+            b(1),
+            b(0),
+            v
+        );
     }
 }
 

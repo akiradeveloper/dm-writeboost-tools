@@ -1,5 +1,4 @@
 FROM 'centos:8'
-WORKDIR '/wbtools-root'
 
 RUN yum install -y sudo gcc
 RUN yum install -y iputils bind-utils make
@@ -15,3 +14,5 @@ RUN sh ${HOME}/rustup.rs -y
 RUN echo $HOME
 ENV PATH=/home/${USER}/.cargo/bin:$PATH
 RUN echo $PATH
+
+WORKDIR '/work'
