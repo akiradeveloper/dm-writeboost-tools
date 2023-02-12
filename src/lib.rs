@@ -34,7 +34,7 @@ impl BlockDevice {
         let output = String::from_utf8(output)
             .expect("Invalid utf8 output")
             .to_string();
-        let output = output.trim_right();
+        let output = output.trim_end();
         i64::from_str(output).expect("Couldn't parse as i64")
     }
 }
