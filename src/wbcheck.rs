@@ -1,4 +1,5 @@
 extern crate clap;
+extern crate crc;
 
 use clap::{App, Arg};
 use std::fs::File;
@@ -7,8 +8,10 @@ use std::io::Seek;
 use std::io::SeekFrom;
 use std::str::FromStr;
 
+use crc::{Crc, CRC_32_ISCSI};
+pub const CASTAGNOLI: Crc<u32> = Crc::<u32>::new(&CRC_32_ISCSI);
 fn checksum(data: &[u8]) -> u32 {
-    crc::crc32::checksum_castagnoli(data)
+    CASTAGNOLI.checksum(data)
 }
 
 #[test]
