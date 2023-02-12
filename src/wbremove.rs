@@ -1,34 +1,31 @@
 extern crate clap;
 
-use clap::{App, Arg};
+use clap::Parser;
 use std::process::Command;
 
+#[derive(Parser)]
+#[command(name = "wbremove")]
+#[command(about = "Remove a writeboost device")]
+#[command(author, version)]
+struct Args {
+    #[arg(help = "Name of the writeboost device")]
+    lvname: String,
+    #[arg(long, help = "Don't flush RAM buffer to cache device before removing")]
+    noflush: bool,
+    #[arg(
+        long,
+        help = "Don't write back dirty caches to the backing device before removing"
+    )]
+    nowriteback: bool,
+}
+
 fn main() {
-    let matches = App::new("wbremove")
-        .version(lib::VERSION)
-        .author(lib::AUTHOR)
-        .about("Remove a writeboost device")
-        .arg(
-            Arg::with_name("LVNAME")
-                .help("Name of the writeboost device")
-                .required(true)
-                .index(1),
-        )
-        .arg(
-            Arg::with_name("noflush")
-                .help("Don't flush RAM buffer to cache device before removing")
-                .long("noflush"),
-        )
-        .arg(
-            Arg::with_name("nowriteback")
-                .help("Don't write back dirty caches to the backing device before removing")
-                .long("nowriteback"),
-        )
-        .get_matches();
+    let args = Args::parse();
 
-    let wbname = matches.value_of("LVNAME").unwrap().to_string();
+    let wbname = args.lvname;
 
-    if !matches.is_present("noflush") {
+    let do_flush = !args.noflush;
+    if do_flush {
         let status = Command::new("dmsetup")
             .arg("suspend")
             .arg(&wbname)
@@ -44,9 +41,8 @@ fn main() {
         assert!(status.success());
     }
 
-    let will_writeback = !matches.is_present("nowriteback");
-
-    if will_writeback {
+    let do_writeback = !args.nowriteback;
+    if do_writeback {
         let status = Command::new("dmsetup")
             .arg("message")
             .arg(&wbname)
@@ -70,7 +66,7 @@ fn main() {
         .expect("Failed to execute dmsetup remove");
     assert!(status.success());
 
-    if will_writeback {
+    if do_writeback {
         let status = Command::new("dd")
             .arg("if=/dev/zero")
             .arg(format!("of=/dev/{}", cache_dev_name))
