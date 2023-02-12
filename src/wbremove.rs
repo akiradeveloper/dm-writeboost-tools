@@ -1,7 +1,6 @@
 extern crate clap;
-extern crate lib;
 
-use clap::{Arg, App};
+use clap::{App, Arg};
 use std::process::Command;
 
 fn main() {
@@ -9,16 +8,22 @@ fn main() {
         .version(lib::VERSION)
         .author(lib::AUTHOR)
         .about("Remove a writeboost device")
-        .arg(Arg::with_name("LVNAME")
-             .help("Name of the writeboost device")
-             .required(true)
-             .index(1))
-        .arg(Arg::with_name("noflush")
-             .help("Don't flush RAM buffer to cache device before removing")
-             .long("noflush"))
-        .arg(Arg::with_name("nowriteback")
-             .help("Don't write back dirty caches to the backing device before removing")
-             .long("nowriteback"))
+        .arg(
+            Arg::with_name("LVNAME")
+                .help("Name of the writeboost device")
+                .required(true)
+                .index(1),
+        )
+        .arg(
+            Arg::with_name("noflush")
+                .help("Don't flush RAM buffer to cache device before removing")
+                .long("noflush"),
+        )
+        .arg(
+            Arg::with_name("nowriteback")
+                .help("Don't write back dirty caches to the backing device before removing")
+                .long("nowriteback"),
+        )
         .get_matches();
 
     let wbname = matches.value_of("LVNAME").unwrap().to_string();

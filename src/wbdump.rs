@@ -1,7 +1,6 @@
 extern crate clap;
-extern crate lib;
 
-use clap::{Arg, App};
+use clap::{App, Arg};
 use std::str::FromStr;
 
 fn main() {
@@ -9,21 +8,28 @@ fn main() {
         .version(lib::VERSION)
         .author(lib::AUTHOR)
         .about("Dump a cache block")
-        .arg(Arg::with_name("CACHEDEV")
-             .help("Path to the cache device")
-             .required(true)
-             .index(1))
-        .arg(Arg::with_name("MBIDX")
-             .help("Metablock index")
-             .required(true)
-             .index(2))
-        .arg(Arg::with_name("baseid")
-             .help("MBIDX is relative to this SEGID (default is 1)")
-             .long("baseid")
-             .takes_value(true))
+        .arg(
+            Arg::with_name("CACHEDEV")
+                .help("Path to the cache device")
+                .required(true)
+                .index(1),
+        )
+        .arg(
+            Arg::with_name("MBIDX")
+                .help("Metablock index")
+                .required(true)
+                .index(2),
+        )
+        .arg(
+            Arg::with_name("baseid")
+                .help("MBIDX is relative to this SEGID (default is 1)")
+                .long("baseid")
+                .takes_value(true),
+        )
         .get_matches();
 
-    let mb_idx: i32 = i32::from_str(matches.value_of("MBIDX").unwrap()).expect("metablock index should be int");
+    let mb_idx: i32 =
+        i32::from_str(matches.value_of("MBIDX").unwrap()).expect("metablock index should be int");
     let cache_dev = {
         let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
         lib::CacheDevice::new(devname.to_owned())
@@ -48,7 +54,9 @@ fn main() {
         .output()
         .expect("failed to execute od")
         .stdout;
-    let output = String::from_utf8(output).expect("invalid utf8 output").to_string();
+    let output = String::from_utf8(output)
+        .expect("invalid utf8 output")
+        .to_string();
     let output = output.trim();
     println!("{}", output);
 }

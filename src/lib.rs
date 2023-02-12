@@ -1,6 +1,6 @@
 extern crate byteorder;
 
-use byteorder::{ReadBytesExt, LittleEndian};
+use byteorder::{LittleEndian, ReadBytesExt};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Cursor;
@@ -13,42 +13,40 @@ pub static VERSION: &'static str = "1.0.1";
 pub static AUTHOR: &'static str = "Akira Hayakawa <ruby.wktk@gmail.com>";
 
 pub struct BlockDevice {
-    name: String
+    name: String,
 }
 
 impl BlockDevice {
     pub fn new(name_: String) -> Self {
-        BlockDevice {
-            name: name_
-        }
+        BlockDevice { name: name_ }
     }
     pub fn name(&self) -> String {
         self.name.to_owned()
     }
     pub fn size(&self) -> i64 {
-        use std::process::Command;
         use std::str::FromStr;
-        let output: Vec<u8> =
-            Command::new("blockdev")
+        let output: Vec<u8> = Command::new("blockdev")
             .arg("--getsz")
             .arg(&self.name())
             .output()
             .expect(&format!("Failed to get the size of {}", self.name()))
             .stdout;
-        let output = String::from_utf8(output).expect("Invalid utf8 output").to_string();
+        let output = String::from_utf8(output)
+            .expect("Invalid utf8 output")
+            .to_string();
         let output = output.trim_right();
         i64::from_str(output).expect("Couldn't parse as i64")
     }
 }
 
 pub struct CacheDevice {
-    pub dev: BlockDevice
+    pub dev: BlockDevice,
 }
 
 impl CacheDevice {
     pub fn new(name: String) -> Self {
         CacheDevice {
-            dev: BlockDevice::new(name)
+            dev: BlockDevice::new(name),
         }
     }
     fn nr_segments(&self) -> i32 {
@@ -63,7 +61,7 @@ impl CacheDevice {
 pub struct SegmentHeader {
     pub id: u64,
     pub checksum: u32,
-    pub length: u8
+    pub length: u8,
 }
 
 impl SegmentHeader {
@@ -75,7 +73,7 @@ impl SegmentHeader {
         SegmentHeader {
             id: id_,
             checksum: checksum_,
-            length: length_
+            length: length_,
         }
     }
     pub fn uninitialized(&self) -> bool {
@@ -102,7 +100,7 @@ impl Segment {
             let dirty_bits_ = rdr.read_u8().unwrap();
             let metablock = Metablock {
                 sector: sector_,
-                dirty_bits: dirty_bits_
+                dirty_bits: dirty_bits_,
             };
             metablocks.push(metablock);
             let padding = 16 - (8 + 1);
@@ -113,21 +111,19 @@ impl Segment {
 }
 
 pub struct SuperBlockHeader {
-    pub magic: u32
+    pub magic: u32,
 }
 
 impl SuperBlockHeader {
     pub fn from_buf(data: &[u8]) -> SuperBlockHeader {
         let mut rdr = Cursor::new(data);
         let magic_ = rdr.read_u32::<LittleEndian>().unwrap();
-        SuperBlockHeader {
-            magic: magic_
-        }
+        SuperBlockHeader { magic: magic_ }
     }
 }
 
 pub struct SuperBlockRecord {
-    pub last_writeback_segment_id: u64
+    pub last_writeback_segment_id: u64,
 }
 
 impl SuperBlockRecord {
@@ -135,14 +131,14 @@ impl SuperBlockRecord {
         let mut rdr = Cursor::new(data);
         let last_writeback_segment_id_ = rdr.read_u64::<LittleEndian>().unwrap();
         SuperBlockRecord {
-            last_writeback_segment_id: last_writeback_segment_id_
+            last_writeback_segment_id: last_writeback_segment_id_,
         }
     }
 }
 
 #[derive(Debug)]
 pub struct SysDevTable {
-    map: HashMap<String, String>
+    map: HashMap<String, String>,
 }
 
 impl SysDevTable {
@@ -150,17 +146,15 @@ impl SysDevTable {
         let mut f = File::open(path).unwrap();
         let mut s = String::new();
         f.read_to_string(&mut s).unwrap();
-        let it = s.lines().map (|line| {
-             let v: Vec<&str> = line.split("=").collect();
-             (v[0].to_string(), v[1].to_string())
+        let it = s.lines().map(|line| {
+            let v: Vec<&str> = line.split("=").collect();
+            (v[0].to_string(), v[1].to_string())
         });
         let mut m = HashMap::new();
         for (k, v) in it {
             m.insert(k, v);
         }
-        SysDevTable {
-            map: m
-        }
+        SysDevTable { map: m }
     }
     pub fn get(&self, name: &str) -> String {
         self.map[name].to_string()
@@ -174,7 +168,7 @@ fn test_read_sys_dev_file() {
 }
 
 pub struct BlockNumber {
-    value: String
+    value: String,
 }
 
 impl BlockNumber {
@@ -189,19 +183,23 @@ impl BlockNumber {
 
 pub struct DMTable {
     pub backing_dev: BlockNumber,
-    pub cache_dev: BlockNumber
+    pub cache_dev: BlockNumber,
 }
 
 impl DMTable {
     pub fn parse(line: String) -> DMTable {
-        let line: Vec<String> = line.split(" ").filter(|x| x != &"").map(|x| x.to_string()).collect();
+        let line: Vec<String> = line
+            .split(" ")
+            .filter(|x| x != &"")
+            .map(|x| x.to_string())
+            .collect();
         DMTable {
             backing_dev: BlockNumber {
-                value: line[3].clone()
+                value: line[3].clone(),
             },
             cache_dev: BlockNumber {
-                value: line[4].clone()
-            }
+                value: line[4].clone(),
+            },
         }
     }
 }
@@ -218,14 +216,12 @@ fn test_dmtable_parse() {
 }
 
 pub struct WBDev {
-    name: String
+    name: String,
 }
 
 impl WBDev {
     pub fn new(name_: String) -> WBDev {
-        WBDev {
-            name: name_
-        }
+        WBDev { name: name_ }
     }
     pub fn table(&self) -> DMTable {
         let output = Command::new("dmsetup")
@@ -234,7 +230,9 @@ impl WBDev {
             .output()
             .expect("Fail to dmsetup table")
             .stdout;
-        let output = String::from_utf8(output).expect("Invalid utf8 output").to_string();
+        let output = String::from_utf8(output)
+            .expect("Invalid utf8 output")
+            .to_string();
         let output = output.trim().to_string();
         DMTable::parse(output)
     }

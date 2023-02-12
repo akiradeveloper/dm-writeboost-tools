@@ -10,28 +10,28 @@ clap = "2"
 
 [[bin]]
 name = "wbcheck"
-path = "src/wbcheck/main.rs"
+path = "src/wbcheck.rs"
 
 [[bin]]
 name = "wbcreate"
-path = "src/wbcreate/main.rs"
+path = "src/wbcreate.rs"
 
 [[bin]]
 name = "wbdump"
-path = "src/wbdump/main.rs"
+path = "src/wbdump.rs"
 
 [[bin]]
 name = "wbmeta"
-path = "src/wbmeta/main.rs"
+path = "src/wbmeta.rs"
 
 [[bin]]
 name = "wbremove"
-path = "src/wbremove/main.rs"
+path = "src/wbremove.rs"
 
 [[bin]]
 name = "wbstatus"
-path = "src/wbstatus/main.rs"
+path = "src/wbstatus.rs"
 
 [lib]
 name = "lib"
-path = "src/lib/lib.rs"
+path = "src/lib.rs"
