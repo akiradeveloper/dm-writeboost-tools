@@ -1,6 +1,5 @@
 extern crate clap;
 
-use clap::App;
 use std::io::{self, Read};
 
 fn print_status(s: &str) {
@@ -44,16 +43,21 @@ fn test_print_status() {
     print_status(&buf);
 }
 
-fn main() {
-    App::new("wbstatus")
-        .version(lib::VERSION)
-        .author(lib::AUTHOR)
-        .about("Pretty-print the dmsetup status output")
-        .usage("dmsetup status wbdev | wbstatus")
-        .get_matches();
+use clap::Parser;
+#[derive(Parser)]
+#[command(name = "wbstatus")]
+#[command(about = "Pretty-print the dmsetup status output")]
+#[command(override_usage = "dmsetup status wbdev | wbstatus")]
+#[command(author, version)]
+struct Args;
+
+fn main() -> anyhow::Result<()> {
+    let _ = Args::parse();
 
     let mut buf = String::new();
-    io::stdin().read_to_string(&mut buf).unwrap();
+    io::stdin().read_to_string(&mut buf)?;
 
     print_status(&buf);
+
+    Ok(())
 }
