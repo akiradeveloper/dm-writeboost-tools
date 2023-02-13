@@ -1,77 +1,49 @@
 extern crate clap;
 
-use clap::{App, Arg};
 use std::process::Command;
 
-fn main() {
-    let matches = App::new("wbcreate")
-        .version(lib::VERSION)
-        .author(lib::AUTHOR)
-        .about("Create a writeboost device")
-        .arg(
-            Arg::with_name("LVNAME")
-                .help("Name of the writeboost device")
-                .required(true)
-                .index(1),
-        )
-        .arg(
-            Arg::with_name("BACKINGDEV")
-                .help("Path to the backing device")
-                .required(true)
-                .index(2),
-        )
-        .arg(
-            Arg::with_name("CACHEDEV")
-                .help("Path to the cache device")
-                .required(true)
-                .index(3),
-        )
-        .arg(
-            Arg::with_name("reformat")
-                .help("Reformat the cache device. This cleans up all existing cache blocks")
-                .long("reformat"),
-        )
-        .arg(Arg::with_name("write_around_mode").long("write_around_mode"))
-        .arg(
-            Arg::with_name("writeback_threshold")
-                .long("writeback_threshold")
-                .value_name("INT")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::with_name("nr_max_batched_writeback")
-                .long("nr_max_batched_writeback")
-                .value_name("INT")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::with_name("update_sb_record_interval")
-                .long("update_sb_record_interval")
-                .value_name("INT")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::with_name("sync_data_interval")
-                .long("sync_data_interval")
-                .value_name("INT")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::with_name("read_cache_threshold")
-                .long("read_cache_threshold")
-                .value_name("INT")
-                .takes_value(true),
-        )
-        .get_matches();
+use clap::Parser;
+#[derive(Parser)]
+#[command(name = "wbcreate")]
+#[command(about = "Create a writeboost device")]
+#[command(author, version)]
+struct Args {
+    #[arg(help = "Name of the writeboost device")]
+    lvname: String,
+    #[arg(help = "Path to the backing device")]
+    backingdev: String,
+    #[arg(help = "Path to the cache device")]
+    cachedev: String,
+    #[arg(
+        help = "Reformat the cache device. This cleans up all existing cache blocks",
+        long
+    )]
+    reformat: bool,
+    #[arg(long)]
+    write_around_mode: bool,
+    #[arg(long, value_name = "INT")]
+    writeback_threshold: Option<u32>,
+    #[arg(long, value_name = "INT")]
+    nr_max_batched_writeback: Option<u32>,
+    #[arg(long, value_name = "INT")]
+    update_sb_record_interval: Option<u32>,
+    #[arg(long, value_name = "INT")]
+    sync_data_interval: Option<u32>,
+    #[arg(long, value_name = "INT")]
+    read_cache_threshold: Option<u32>,
+}
 
-    let wbname = matches.value_of("LVNAME").unwrap().to_string();
+fn main() {
+    let args = Args::parse();
+
+    let wbname = args.lvname;
     let backing_dev = {
-        let name = matches.value_of("BACKINGDEV").unwrap().to_string();
+        let name = args.backingdev;
         lib::BlockDevice::new(name)
     };
-    let cache_dev_name = matches.value_of("CACHEDEV").unwrap().to_string();
+    let cache_dev_name = args.cachedev;
 
-    if matches.is_present("reformat") {
+    if args.reformat {
         let status = Command::new("dd")
             .arg("if=/dev/zero")
             .arg(format!("of={}", cache_dev_name))
@@ -83,22 +55,29 @@ fn main() {
     }
 
     let mut optionals: Vec<String> = Vec::new();
-    if matches.is_present("write_around_mode") {
+    if args.write_around_mode {
         optionals.push("write_around_mode".to_string());
         optionals.push("1".to_string());
     }
-    let tunables = [
-        "writeback_threshold",
-        "nr_max_batched_writeback",
-        "update_sb_record_interval",
-        "sync_data_interval",
-        "read_cache_threshold",
-    ];
-    for name in &tunables {
-        if let Some(value) = matches.value_of(name) {
-            optionals.push(name.to_string());
-            optionals.push(value.to_string());
-        }
+    if let Some(v) = args.writeback_threshold {
+        optionals.push("writeback_threshold".to_string());
+        optionals.push(v.to_string());
+    }
+    if let Some(v) = args.nr_max_batched_writeback {
+        optionals.push("nr_max_batched_writeback".to_string());
+        optionals.push(v.to_string());
+    }
+    if let Some(v) = args.update_sb_record_interval {
+        optionals.push("update_sb_record_interval".to_string());
+        optionals.push(v.to_string());
+    }
+    if let Some(v) = args.sync_data_interval {
+        optionals.push("sync_data_interval".to_string());
+        optionals.push(v.to_string());
+    }
+    if let Some(v) = args.read_cache_threshold {
+        optionals.push("read_cache_threshold".to_string());
+        optionals.push(v.to_string());
     }
 
     let n = optionals.len();
