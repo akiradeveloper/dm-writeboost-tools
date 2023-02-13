@@ -1,45 +1,32 @@
 extern crate clap;
 
-use clap::{App, Arg};
 use std::str::FromStr;
 
-fn main() {
-    let matches = App::new("wbdump")
-        .version(lib::VERSION)
-        .author(lib::AUTHOR)
-        .about("Dump a cache block")
-        .arg(
-            Arg::with_name("CACHEDEV")
-                .help("Path to the cache device")
-                .required(true)
-                .index(1),
-        )
-        .arg(
-            Arg::with_name("MBIDX")
-                .help("Metablock index")
-                .required(true)
-                .index(2),
-        )
-        .arg(
-            Arg::with_name("baseid")
-                .help("MBIDX is relative to this SEGID (default is 1)")
-                .long("baseid")
-                .takes_value(true),
-        )
-        .get_matches();
+use clap::Parser;
+#[derive(Parser)]
+#[command(name = "wbdump")]
+#[command(about = "Dump a cache block")]
+#[command(author, version)]
+struct Args {
+    #[arg(help = "Path to the cache device")]
+    cachedev: String,
+    #[arg(help = "Metablock index")]
+    mbidx: i32,
+    #[arg(long, help = "MBIDX is relative to this SEGID (default is 1)")]
+    #[arg(default_value_t = 1)]
+    segid: i32,
+}
 
-    let mb_idx: i32 =
-        i32::from_str(matches.value_of("MBIDX").unwrap()).expect("metablock index should be int");
+fn main() {
+    let args = Args::parse();
+
+    let mb_idx: i32 = args.mbidx;
     let cache_dev = {
-        let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
+        let devname = args.cachedev;
         lib::CacheDevice::new(devname.to_owned())
     };
 
-    let mut base_id = 1;
-    if let Some(value) = matches.value_of("baseid") {
-        let id = i32::from_str(value).expect("baseid should be int");
-        base_id = id;
-    }
+    let mut base_id = args.segid;
 
     base_id += mb_idx / 127;
     let idx_inseg = mb_idx % 127;
