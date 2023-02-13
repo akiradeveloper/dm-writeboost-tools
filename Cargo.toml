@@ -14,6 +14,10 @@ name = "wbcheck"
 path = "src/wbcheck.rs"
 
 [[bin]]
+name = "wbmeta"
+path = "src/wbmeta.rs"
+
+[[bin]]
 name = "wbremove"
 path = "src/wbremove.rs"
 

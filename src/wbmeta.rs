@@ -1,34 +1,27 @@
 extern crate clap;
 
-use clap::{App, Arg};
 use std::fs::File;
 use std::io::Read;
 use std::io::Seek;
 use std::io::SeekFrom;
-use std::str::FromStr;
+
+use clap::Parser;
+#[derive(Parser)]
+#[command(name = "wbmeta")]
+#[command(about = "Dump a segment header")]
+#[command(author, version)]
+struct Args {
+    #[arg(help = "Path to the cache device")]
+    cachedev: String,
+    #[arg(help = "Segment id. 0 means the superblock")]
+    segid: i32,
+}
 
 fn main() {
-    let matches = App::new("wbmeta")
-        .version(lib::VERSION)
-        .author(lib::AUTHOR)
-        .about("Dump a segment header")
-        .arg(
-            Arg::with_name("CACHEDEV")
-                .help("Path to the cache device")
-                .required(true)
-                .index(1),
-        )
-        .arg(
-            Arg::with_name("SEGID")
-                .help("Segment id")
-                .required(true)
-                .index(2),
-        )
-        .get_matches();
+    let args = Args::parse();
 
-    let devname: String = matches.value_of("CACHEDEV").unwrap().to_string();
-    let id: i32 =
-        i32::from_str(matches.value_of("SEGID").unwrap()).expect("Segment id should be int");
+    let devname: String = args.cachedev;
+    let id: i32 = args.segid;
 
     let cache_dev = lib::CacheDevice::new(devname.to_owned());
 
