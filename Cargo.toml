@@ -10,6 +10,10 @@ clap = { version = "4", features = ["derive"] }
 anyhow = "1"
 
 [[bin]]
+name = "wbcheck"
+path = "src/wbcheck.rs"
+
+[[bin]]
 name = "wbremove"
 path = "src/wbremove.rs"
 
