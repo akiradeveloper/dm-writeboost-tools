@@ -1,3 +1,8 @@
+2024-05-04  Akira Hayakawa  <ruby.wktk@gmail.com>
+
+	* v1.1.0
+	* Use clap4 for declarative style parser
+
 2017-04-13  Akira Hayakawa  <ruby.wktk@gmail.com>
 
 	* v1.0.1
