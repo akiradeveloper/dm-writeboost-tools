@@ -7,6 +7,7 @@ use clap::Parser;
 #[command(name = "wbcreate")]
 #[command(about = "Create a writeboost device")]
 #[command(author, version)]
+#[clap(rename_all = "snake_case")]
 struct Args {
     #[arg(help = "Name of the writeboost device")]
     lvname: String,
