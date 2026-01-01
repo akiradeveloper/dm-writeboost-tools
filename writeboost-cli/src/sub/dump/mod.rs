@@ -1,13 +1,9 @@
-extern crate clap;
+use super::*;
 
-use std::str::FromStr;
-
-use clap::Parser;
-#[derive(Parser)]
-#[command(name = "wbdump")]
+#[derive(Args)]
 #[command(about = "Dump a cache block")]
 #[command(author, version)]
-struct Args {
+pub struct Opts {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
     #[arg(help = "Metablock index")]
@@ -17,13 +13,11 @@ struct Args {
     segid: i32,
 }
 
-fn main() {
-    let args = Args::parse();
-
+pub fn run(args: Opts) {
     let mb_idx: i32 = args.mbidx;
     let cache_dev = {
         let devname = args.cachedev;
-        lib::CacheDevice::new(devname.to_owned())
+        CacheDevice::new(devname.to_owned())
     };
 
     let mut base_id = args.segid;

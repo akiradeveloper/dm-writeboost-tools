@@ -1,13 +1,11 @@
-extern crate clap;
+use super::*;
 
-use clap::Parser;
 use std::process::Command;
 
-#[derive(Parser)]
-#[command(name = "wbremove")]
+#[derive(Args)]
 #[command(about = "Remove a writeboost device")]
 #[command(author, version)]
-struct Args {
+pub struct Opts {
     #[arg(help = "Name of the writeboost device")]
     lvname: String,
     #[arg(long, help = "Don't flush RAM buffer to cache device before removing")]
@@ -19,9 +17,7 @@ struct Args {
     nowriteback: bool,
 }
 
-fn main() {
-    let args = Args::parse();
-
+pub fn run(args: Opts) {
     let wbname = args.lvname;
 
     let do_flush = !args.noflush;
@@ -53,7 +49,7 @@ fn main() {
         assert!(status.success());
     }
 
-    let cache_dev_name = lib::WBDev::new(wbname.to_string())
+    let cache_dev_name = WBDev::new(wbname.to_string())
         .table()
         .cache_dev
         .sys_dev_table()

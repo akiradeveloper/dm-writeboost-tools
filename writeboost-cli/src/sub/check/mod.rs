@@ -1,5 +1,4 @@
-extern crate clap;
-extern crate crc;
+use super::*;
 
 use std::fs::File;
 use std::io::Read;
@@ -12,12 +11,9 @@ fn checksum(data: &[u8]) -> u32 {
     CASTAGNOLI.checksum(data)
 }
 
-use clap::Parser;
-#[derive(Parser)]
-#[command(name = "wbcheck")]
+#[derive(Args)]
 #[command(about = "Check if the segment is broken")]
-#[command(author, version)]
-struct Args {
+pub struct Opts {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
     #[arg(help = "Segment id")]
@@ -30,12 +26,10 @@ fn test_checksum() {
     assert_eq!(checksum(&buf), 143703573);
 }
 
-fn main() {
-    let args = Args::parse();
-
+pub fn run(args: Opts) {
     let devname: String = args.cachedev;
     let id = args.segid;
-    let cache_dev = lib::CacheDevice::new(devname.to_owned());
+    let cache_dev = CacheDevice::new(devname.to_owned());
 
     let mut f = File::open(&devname).expect(&format!("Device {} not found", &devname));
 
@@ -45,7 +39,7 @@ fn main() {
     let header = {
         let mut buf = vec![0; 512];
         f.read(&mut buf).unwrap();
-        lib::SegmentHeader::from_buf(&buf)
+        SegmentHeader::from_buf(&buf)
     };
 
     if header.uninitialized() {

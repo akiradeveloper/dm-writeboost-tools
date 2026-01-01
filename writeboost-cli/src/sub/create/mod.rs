@@ -1,14 +1,12 @@
-extern crate clap;
-
+use super::*;
+ 
 use std::process::Command;
 
-use clap::Parser;
-#[derive(Parser)]
-#[command(name = "wbcreate")]
+#[derive(Args)]
 #[command(about = "Create a writeboost device")]
 #[command(author, version)]
 #[clap(rename_all = "snake_case")]
-struct Args {
+pub struct Opts {
     #[arg(help = "Name of the writeboost device")]
     lvname: String,
     #[arg(help = "Path to the backing device")]
@@ -34,13 +32,11 @@ struct Args {
     read_cache_threshold: Option<u32>,
 }
 
-fn main() {
-    let args = Args::parse();
-
+pub fn run(args: Opts) {
     let wbname = args.lvname;
     let backing_dev = {
         let name = args.backingdev;
-        lib::BlockDevice::new(name)
+        BlockDevice::new(name)
     };
     let cache_dev_name = args.cachedev;
 
