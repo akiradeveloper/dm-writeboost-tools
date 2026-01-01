@@ -1,4 +1,4 @@
-extern crate clap;
+use super::*;
 
 use std::io::{self, Read};
 
@@ -43,21 +43,15 @@ fn test_print_status() {
     print_status(&buf);
 }
 
-use clap::Parser;
-#[derive(Parser)]
-#[command(name = "wbstatus")]
+#[derive(Args)]
 #[command(about = "Pretty-print the dmsetup status output")]
 #[command(override_usage = "dmsetup status wbdev | wbstatus")]
 #[command(author, version)]
-struct Args;
+pub struct Opts;
 
-fn main() -> anyhow::Result<()> {
-    let _ = Args::parse();
-
+pub fn run(_: Opts) {
     let mut buf = String::new();
-    io::stdin().read_to_string(&mut buf)?;
+    io::stdin().read_to_string(&mut buf).unwrap();
 
     print_status(&buf);
-
-    Ok(())
 }
