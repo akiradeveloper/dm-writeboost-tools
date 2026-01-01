@@ -35,21 +35,26 @@ fn print_status(s: &str) {
     }
 }
 
-#[test]
-fn test_print_status() {
-    let mut buf = String::new();
-    let mut f = std::fs::File::open("data/sample.status.226").unwrap();
-    f.read_to_string(&mut buf).unwrap();
-    print_status(&buf);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_print_status() {
+        let mut buf = String::new();
+        let mut f = std::fs::File::open("data/sample.status.226").unwrap();
+        f.read_to_string(&mut buf).unwrap();
+        print_status(&buf);
+    }
 }
 
 #[derive(Args)]
 #[command(about = "Pretty-print the dmsetup status output")]
 #[command(override_usage = "dmsetup status wbdev | wbstatus")]
 #[command(author, version)]
-pub struct Opts;
+pub struct CommandArgs;
 
-pub fn run(_: Opts) {
+pub fn run(_: CommandArgs) {
     let mut buf = String::new();
     io::stdin().read_to_string(&mut buf).unwrap();
 

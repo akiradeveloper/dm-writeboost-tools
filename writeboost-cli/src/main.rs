@@ -7,24 +7,24 @@ use utils::*;
 
 #[derive(Subcommand)]
 enum Sub {
-    Check(sub::check::Opts),
-    Create(sub::create::Opts),
-    Remove(sub::remove::Opts),
-    Dump(sub::dump::Opts),
-    Meta(sub::meta::Opts),
-    Status(sub::status::Opts),
+    Check(sub::check::CommandArgs),
+    Create(sub::create::CommandArgs),
+    Remove(sub::remove::CommandArgs),
+    Dump(sub::dump::CommandArgs),
+    Meta(sub::meta::CommandArgs),
+    Status(sub::status::CommandArgs),
 }
 
 #[derive(Parser)]
-struct Opts {
+struct CommandArgs {
     #[clap(subcommand)]
     sub: Sub,
 }
 
 fn main() {
-    let opts = Opts::parse();
+    let args = CommandArgs::parse();
 
-    match opts.sub {
+    match args.sub {
         Sub::Check(args) => sub::check::run(args),
         Sub::Create(args) => sub::create::run(args),
         Sub::Remove(args) => sub::remove::run(args),

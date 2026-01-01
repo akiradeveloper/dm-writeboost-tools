@@ -17,9 +17,11 @@ impl BlockDevice {
     pub fn new(name_: String) -> Self {
         BlockDevice { name: name_ }
     }
+
     pub fn name(&self) -> String {
         self.name.to_owned()
     }
+
     pub fn size(&self) -> i64 {
         use std::str::FromStr;
         let output: Vec<u8> = Command::new("blockdev")
@@ -46,9 +48,11 @@ impl CacheDevice {
             dev: BlockDevice::new(name),
         }
     }
+
     fn nr_segments(&self) -> i32 {
         ((self.dev.size() - (1 << 11)) / (1 << 10)) as i32
     }
+
     pub fn calc_segment_start(&self, id: i32) -> i32 {
         let idx = (id - 1) % self.nr_segments();
         (1 << 11) + (idx * (1 << 10))
@@ -73,6 +77,7 @@ impl SegmentHeader {
             length: length_,
         }
     }
+
     pub fn uninitialized(&self) -> bool {
         self.id == 0
     }
@@ -83,7 +88,7 @@ pub struct Metablock {
     pub dirty_bits: u8,
 }
 
-pub struct Segment {}
+pub struct Segment;
 
 impl Segment {
     pub fn from_buf(buf: &[u8]) -> (SegmentHeader, Vec<Metablock>) {
@@ -153,15 +158,10 @@ impl SysDevTable {
         }
         SysDevTable { map: m }
     }
+
     pub fn get(&self, name: &str) -> String {
         self.map[name].to_string()
     }
-}
-
-#[test]
-fn test_read_sys_dev_file() {
-    let t = SysDevTable::from_file("data/sys_dev.0");
-    assert_eq!(t.get("DEVNAME"), "vda1");
 }
 
 pub struct BlockNumber {
@@ -172,6 +172,7 @@ impl BlockNumber {
     pub fn unwrap(&self) -> String {
         self.value.to_owned()
     }
+
     pub fn sys_dev_table(&self) -> SysDevTable {
         let path = format!("/sys/dev/block/{}/uevent", self.value);
         SysDevTable::from_file(&path)
@@ -201,17 +202,6 @@ impl DMTable {
     }
 }
 
-#[test]
-fn test_dmtable_parse() {
-    let mut s = String::new();
-    let mut f = File::open("data/sample.table.226").unwrap();
-    f.read_to_string(&mut s).unwrap();
-    let t = DMTable::parse(s.trim().to_string());
-    println!("{}", s.clone());
-    assert_eq!(t.backing_dev.unwrap(), "251:0");
-    assert_eq!(t.cache_dev.unwrap(), "251:3");
-}
-
 pub struct WBDev {
     name: String,
 }
@@ -220,6 +210,7 @@ impl WBDev {
     pub fn new(name_: String) -> WBDev {
         WBDev { name: name_ }
     }
+
     pub fn table(&self) -> DMTable {
         let output = Command::new("dmsetup")
             .arg("table")
@@ -232,5 +223,27 @@ impl WBDev {
             .to_string();
         let output = output.trim().to_string();
         DMTable::parse(output)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_read_sys_dev_file() {
+        let t = SysDevTable::from_file("data/sys_dev.0");
+        assert_eq!(t.get("DEVNAME"), "vda1");
+    }
+
+    #[test]
+    fn test_dmtable_parse() {
+        let mut s = String::new();
+        let mut f = File::open("data/sample.table.226").unwrap();
+        f.read_to_string(&mut s).unwrap();
+        let t = DMTable::parse(s.trim().to_string());
+        println!("{}", s.clone());
+        assert_eq!(t.backing_dev.unwrap(), "251:0");
+        assert_eq!(t.cache_dev.unwrap(), "251:3");
     }
 }

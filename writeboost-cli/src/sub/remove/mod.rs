@@ -5,7 +5,7 @@ use std::process::Command;
 #[derive(Args)]
 #[command(about = "Remove a writeboost device")]
 #[command(author, version)]
-pub struct Opts {
+pub struct CommandArgs {
     #[arg(help = "Name of the writeboost device")]
     lvname: String,
     #[arg(long, help = "Don't flush RAM buffer to cache device before removing")]
@@ -17,7 +17,7 @@ pub struct Opts {
     nowriteback: bool,
 }
 
-pub fn run(args: Opts) {
+pub fn run(args: CommandArgs) {
     let wbname = args.lvname;
 
     let do_flush = !args.noflush;

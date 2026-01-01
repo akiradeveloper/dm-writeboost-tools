@@ -8,14 +8,14 @@ use std::io::SeekFrom;
 #[derive(Args)]
 #[command(about = "Dump a segment header")]
 #[command(author, version)]
-pub struct Opts {
+pub struct CommandArgs {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
     #[arg(help = "Segment id. 0 means the superblock")]
     segid: i32,
 }
 
-pub fn run(args: Opts) {
+pub fn run(args: CommandArgs) {
     let devname: String = args.cachedev;
     let id: i32 = args.segid;
 
