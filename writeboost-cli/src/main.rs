@@ -1,4 +1,4 @@
-use clap::{Parser, Args, Subcommand};
+use clap::{Args, Parser, Subcommand};
 
 mod sub;
 

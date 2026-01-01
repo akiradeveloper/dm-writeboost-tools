@@ -5,7 +5,7 @@ use std::io::Read;
 use std::io::Seek;
 use std::io::SeekFrom;
 
-use crc::{Crc, CRC_32_ISCSI};
+use crc::{CRC_32_ISCSI, Crc};
 pub const CASTAGNOLI: Crc<u32> = Crc::<u32>::new(&CRC_32_ISCSI);
 fn checksum(data: &[u8]) -> u32 {
     CASTAGNOLI.checksum(data)
@@ -14,7 +14,7 @@ fn checksum(data: &[u8]) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_checksum() {
         let buf = vec![0; 4096 - 512];
