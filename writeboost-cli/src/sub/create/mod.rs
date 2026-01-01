@@ -6,7 +6,7 @@ use std::process::Command;
 #[command(about = "Create a writeboost device")]
 #[command(author, version)]
 #[clap(rename_all = "snake_case")]
-pub struct Opts {
+pub struct CommandArgs {
     #[arg(help = "Name of the writeboost device")]
     lvname: String,
     #[arg(help = "Path to the backing device")]
@@ -32,7 +32,7 @@ pub struct Opts {
     read_cache_threshold: Option<u32>,
 }
 
-pub fn run(args: Opts) {
+pub fn run(args: CommandArgs) {
     let wbname = args.lvname;
     let backing_dev = {
         let name = args.backingdev;

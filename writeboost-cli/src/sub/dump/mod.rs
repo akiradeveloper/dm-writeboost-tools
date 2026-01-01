@@ -3,7 +3,7 @@ use super::*;
 #[derive(Args)]
 #[command(about = "Dump a cache block")]
 #[command(author, version)]
-pub struct Opts {
+pub struct CommandArgs {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
     #[arg(help = "Metablock index")]
@@ -13,7 +13,7 @@ pub struct Opts {
     segid: i32,
 }
 
-pub fn run(args: Opts) {
+pub fn run(args: CommandArgs) {
     let mb_idx: i32 = args.mbidx;
     let cache_dev = {
         let devname = args.cachedev;

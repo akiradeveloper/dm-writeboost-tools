@@ -11,22 +11,27 @@ fn checksum(data: &[u8]) -> u32 {
     CASTAGNOLI.checksum(data)
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_checksum() {
+        let buf = vec![0; 4096 - 512];
+        assert_eq!(checksum(&buf), 143703573);
+    }
+}
+
 #[derive(Args)]
 #[command(about = "Check if the segment is broken")]
-pub struct Opts {
+pub struct CommandArgs {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
     #[arg(help = "Segment id")]
     segid: i32,
 }
 
-#[test]
-fn test_checksum() {
-    let buf = vec![0; 4096 - 512];
-    assert_eq!(checksum(&buf), 143703573);
-}
-
-pub fn run(args: Opts) {
+pub fn run(args: CommandArgs) {
     let devname: String = args.cachedev;
     let id = args.segid;
     let cache_dev = CacheDevice::new(devname.to_owned());
