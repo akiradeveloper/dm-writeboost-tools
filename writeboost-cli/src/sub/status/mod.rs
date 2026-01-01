@@ -17,11 +17,7 @@ fn print_status(s: &str) {
     println!("write? hit? on_buffer? fullsize?");
     for i in 0..16 {
         let b = |bit: usize| {
-            if (i & (1 << bit)) > 0 {
-                1
-            } else {
-                0
-            }
+            if (i & (1 << bit)) > 0 { 1 } else { 0 }
         };
         let v = toks[10 + i];
         println!(
