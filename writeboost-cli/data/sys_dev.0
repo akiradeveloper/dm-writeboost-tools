@@ -1,0 +1,5 @@
+MAJOR=252
+MINOR=1
+DEVNAME=vda1
+DEVTYPE=partition
+PARTN=1
