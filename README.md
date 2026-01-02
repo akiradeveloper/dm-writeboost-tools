@@ -24,7 +24,8 @@ https://www.youtube.com/watch?v=QAXbmr2Rf30
 
 Check if the log was written successfully.
 
-* `writeboost-cli check /dev/cache 1` checks the segment ID 1. Returns 0 on success.
+* `writeboost-cli check /dev/cache --segid=1` checks the segment ID 1. Returns 0 on success.
+* `writeboost-cli check /dev/cache -a` checks all the segments. Returns 0 on success.
 
 ### create
 
