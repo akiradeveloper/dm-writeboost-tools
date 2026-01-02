@@ -56,9 +56,9 @@ pub fn run(args: CommandArgs) {
         let (header, metablocks) = Segment::from_buf(&buf);
 
         println!("[segment header]");
-        println!("id        = {}", header.id);
-        println!("checksumx = {}", header.checksum);
-        println!("length    = {}", header.length);
+        println!("id       = {}", header.id);
+        println!("checksum = {}", header.checksum);
+        println!("length   = {}", header.length);
 
         for (i, metablock) in metablocks.iter().enumerate() {
             println!(
