@@ -11,7 +11,8 @@ Rustup is the best way to install Rust toolset.
 
 https://github.com/rust-lang-nursery/rustup.rs
 
-Then `cargo install` to install the commands.
+Then `cargo install --path writeboost-cli` to install **writeboost-cli**.
+(For older version, `cargo install --path wbtools`)
 
 ## Video
 
@@ -19,46 +20,46 @@ https://www.youtube.com/watch?v=QAXbmr2Rf30
 
 ## Commands (Lexicographical order)
 
-### wbcheck
+### check
 
 Check if the log was written successfully.
 
-* `wbcheck /dev/cache 1` checks the segment ID 1. Returns 0 on success.
+* `writeboost-cli check /dev/cache 1` checks the segment ID 1. Returns 0 on success.
 
-### wbcreate
+### create
 
 Create a WB device (wrapping dmsetup create)
 
-* `wbcreate wbdev /dev/backing /dev/cache --reformat` creates a WB device with reformatting
-* `wbcreate wbdev /dev/backing /dev/cache --reformat --read_cache_threshold=4 --writeback_threshold=70`
+* `writeboost-cli create wbdev /dev/backing /dev/cache --reformat` creates a WB device with reformatting
+* `writeboost-cli create wbdev /dev/backing /dev/cache --reformat --read_cache_threshold=4 --writeback_threshold=70`
   creates a WB device with some settings
 
-### wbdump
+### dump
 
 Dump the data blocks corresponding to the specified metablock ID.
 
-* `wbdump /dev/cache 126` dumps the data block of metablock index 126
+* `writeboost-cli dump /dev/cache 126` dumps the data block of metablock index 126
 
-### wbmeta
+### meta
 
 Look into the metadata in the cache device.
 
-* `wbmeta /dev/cache 0` dumps the superblock metadata (ID 0 is special)
-* `wbmeta /dev/cache 1` dumps the metadata of segment ID 1
+* `writeboost-cli meta /dev/cache 0` dumps the superblock metadata (ID 0 is special)
+* `writeboost-cli meta /dev/cache 1` dumps the metadata of segment ID 1
 
 ### wbremove
 
 Remove a WB device
 
-* `wbremove wbdev` removes a WB device after flushing data in RAM buffer and then writing back
+* `writeboost-cli remove wbdev` removes a WB device after flushing data in RAM buffer and then writing back
   all cache blocks. This is the way Dmirty Smirnov's writeboost script suggests. (Recommended)  
-* `wbremove wbdev --nowriteback` remove a WB device without writing back all cache blocks.
+* `writeboost-cli remove wbdev --nowriteback` remove a WB device without writing back all cache blocks.
 
 ### wbstatus
 
 Pretty-print the status line.
 
-* `dmsetup status wbdev | wbstatus`
+* `dmsetup status wbdev | writeboost-cli status`
 
 ## Author
 
