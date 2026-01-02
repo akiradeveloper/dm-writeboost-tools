@@ -23,8 +23,6 @@ enum CheckError {
         computed_checksum: u32,
         expected_checksum: u32,
     },
-    #[error("segment id is not matched. expected={expected_id}, actual={actual_id}")]
-    SegmentIdMismatch { expected_id: u64, actual_id: u64 },
 }
 
 fn do_check(devname: &str, seg_id: u64) -> Result<(), CheckError> {
@@ -43,13 +41,6 @@ fn do_check(devname: &str, seg_id: u64) -> Result<(), CheckError> {
 
     if header.uninitialized() {
         return Err(CheckError::NotInitialized);
-    }
-
-    if header.id != seg_id as u64 {
-        return Err(CheckError::SegmentIdMismatch {
-            expected_id: seg_id as u64,
-            actual_id: header.id,
-        });
     }
 
     let computed = {
