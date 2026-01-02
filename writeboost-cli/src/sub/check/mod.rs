@@ -103,7 +103,7 @@ pub fn run(args: CommandArgs) {
 
     match do_check(&devname, id) {
         Ok(()) => {}
-        Err(e@CheckError::NotInitialized) => {
+        Err(e @ CheckError::NotInitialized) => {
             // Since segments are zero-ed out at formatting,
             // if the segment is all zeros, it is considered still unused.
             eprintln!("{e}");
