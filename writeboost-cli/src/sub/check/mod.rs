@@ -112,10 +112,10 @@ pub fn run(args: CommandArgs) {
 
     match do_check(&devname, id) {
         Ok(()) => {}
-        Err(CheckError::NotInitialized) => {
+        Err(e@CheckError::NotInitialized) => {
             // Since segments are zero-ed out at formatting,
             // if the segment is all zeros, it is considered still unused.
-            eprintln!("segment is not initialized");
+            eprintln!("{e}");
         }
         Err(e) => {
             panic!("{e}")
