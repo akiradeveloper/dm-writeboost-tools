@@ -9,3 +9,4 @@ anyhow = "1"
 byteorder = "1"
 clap = { version = "4", features = ["derive"] }
 crc = "3"
+thiserror = "2.0.17"
