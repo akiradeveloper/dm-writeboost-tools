@@ -12,12 +12,12 @@ pub struct CommandArgs {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
     #[arg(help = "Segment id. 0 means the superblock")]
-    segid: i32,
+    segid: u64,
 }
 
 pub fn run(args: CommandArgs) {
     let devname: String = args.cachedev;
-    let id: i32 = args.segid;
+    let id = args.segid;
 
     let cache_dev = CacheDevice::new(devname.to_owned());
 

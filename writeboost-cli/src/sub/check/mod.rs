@@ -19,7 +19,7 @@ enum CheckError {
         "segment {seg_id} is broken. checksum: computed={computed_checksum}, expected={expected_checksum}"
     )]
     CacheBlockBroken {
-        seg_id: i32,
+        seg_id: u64,
         computed_checksum: u32,
         expected_checksum: u32,
     },
@@ -27,7 +27,7 @@ enum CheckError {
     SegmentIdMismatch { expected_id: u64, actual_id: u64 },
 }
 
-fn do_check(devname: &str, seg_id: i32) -> Result<(), CheckError> {
+fn do_check(devname: &str, seg_id: u64) -> Result<(), CheckError> {
     let cache_dev = CacheDevice::new(devname.to_owned());
 
     let mut f = File::open(&devname).expect(&format!("Device {} not found", &devname));
@@ -103,7 +103,7 @@ pub struct CommandArgs {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
     #[arg(help = "Segment id")]
-    segid: i32,
+    segid: u64,
 }
 
 pub fn run(args: CommandArgs) {
