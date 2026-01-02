@@ -93,23 +93,35 @@ mod tests {
 pub struct CommandArgs {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
-    #[arg(help = "Segment id")]
-    segid: u64,
+    #[arg(long, help = "Segment id to check")]
+    segid: Option<u64>,
+    #[arg(short, long, help = "Check all segments")]
+    all: bool,
 }
 
 pub fn run(args: CommandArgs) {
     let devname: String = args.cachedev;
-    let id = args.segid;
 
-    match do_check(&devname, id) {
-        Ok(()) => {}
-        Err(e @ CheckError::NotInitialized) => {
-            // Since segments are zero-ed out at formatting,
-            // if the segment is all zeros, it is considered still unused.
-            eprintln!("{e}");
-        }
-        Err(e) => {
-            panic!("{e}")
+    let range = if let Some(seg_id) = args.segid {
+        seg_id..=seg_id
+    } else if args.all {
+        let cache_dev = CacheDevice::new(devname.to_owned());
+        let nr_segs = cache_dev.nr_segments();
+        1..=nr_segs as u64
+    } else {
+        panic!("either --segid or --all must be specified");
+    };
+
+    for seg_id in range {
+        match do_check(&devname, seg_id) {
+            Ok(()) => {}
+            Err(CheckError::NotInitialized) => {
+                // Since segments are zero-ed out at formatting,
+                // if the segment is all zeros, it is considered still unused.
+            }
+            Err(e) => {
+                panic!("{e}")
+            }
         }
     }
 }

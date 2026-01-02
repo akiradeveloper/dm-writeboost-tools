@@ -49,7 +49,7 @@ impl CacheDevice {
         }
     }
 
-    fn nr_segments(&self) -> u32 {
+    pub fn nr_segments(&self) -> u32 {
         ((self.dev.size() - (1 << 11)) / (1 << 10)) as u32
     }
 
