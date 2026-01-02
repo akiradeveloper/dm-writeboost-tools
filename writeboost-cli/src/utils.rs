@@ -22,7 +22,7 @@ impl BlockDevice {
         self.name.to_owned()
     }
 
-    pub fn size(&self) -> i64 {
+    pub fn size(&self) -> u64 {
         use std::str::FromStr;
         let output: Vec<u8> = Command::new("blockdev")
             .arg("--getsz")
@@ -34,7 +34,7 @@ impl BlockDevice {
             .expect("Invalid utf8 output")
             .to_string();
         let output = output.trim_end();
-        i64::from_str(output).expect("Couldn't parse as i64")
+        u64::from_str(output).expect("Couldn't parse as u64")
     }
 }
 
@@ -49,13 +49,13 @@ impl CacheDevice {
         }
     }
 
-    fn nr_segments(&self) -> i32 {
-        ((self.dev.size() - (1 << 11)) / (1 << 10)) as i32
+    fn nr_segments(&self) -> u32 {
+        ((self.dev.size() - (1 << 11)) / (1 << 10)) as u32
     }
 
-    pub fn calc_segment_start(&self, id: i32) -> i32 {
-        let idx = (id - 1) % self.nr_segments();
-        (1 << 11) + (idx * (1 << 10))
+    pub fn calc_segment_start(&self, id: u64) -> u32 {
+        let idx = (id - 1) % self.nr_segments() as u64;
+        (1 << 11) + (idx as u32 * (1 << 10))
     }
 }
 

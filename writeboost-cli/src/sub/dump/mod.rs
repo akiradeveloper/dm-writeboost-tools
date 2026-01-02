@@ -7,14 +7,14 @@ pub struct CommandArgs {
     #[arg(help = "Path to the cache device")]
     cachedev: String,
     #[arg(help = "Metablock index")]
-    mbidx: i32,
+    mbidx: u32,
     #[arg(long, help = "MBIDX is relative to this SEGID (default is 1)")]
     #[arg(default_value_t = 1)]
-    segid: i32,
+    segid: u64,
 }
 
 pub fn run(args: CommandArgs) {
-    let mb_idx: i32 = args.mbidx;
+    let mb_idx: u32 = args.mbidx;
     let cache_dev = {
         let devname = args.cachedev;
         CacheDevice::new(devname.to_owned())
@@ -22,7 +22,7 @@ pub fn run(args: CommandArgs) {
 
     let mut base_id = args.segid;
 
-    base_id += mb_idx / 127;
+    base_id += mb_idx as u64 / 127;
     let idx_inseg = mb_idx % 127;
     let start_byte = (cache_dev.calc_segment_start(base_id) << 9) + ((1 + idx_inseg) << 12);
 
