@@ -83,7 +83,7 @@ mod tests {
     #[test]
     fn test_check() {
         let devname = "data/sample.cache.226";
-        let seg_id = 1;
+        let seg_id = 73;
         let res = do_check(&devname, seg_id);
         assert!(res.is_ok());
     }
@@ -91,7 +91,7 @@ mod tests {
     #[test]
     fn test_uninitialized() {
         let devname = "data/sample.cache.uninit";
-        let seg_id = 0;
+        let seg_id = 3;
         let res = do_check(&devname, seg_id);
         assert!(matches!(res, Err(CheckError::NotInitialized)));
     }
